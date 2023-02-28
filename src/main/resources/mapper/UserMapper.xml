@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whl.spring.demo.dao.UserDao">
+
+    <resultMap type="com.whl.spring.demo.entity.UserEntity" id="BaseResultMap">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="age" column="age" />
+    </resultMap>
+
+    <sql id="column_all">
+    <![CDATA[
+        id,
+        username,
+        age
+    ]]>
+    </sql>
+
+    <insert id="create">
+    <![CDATA[
+        insert into user (
+    ]]>
+        <include refid="column_all"></include>
+    <![CDATA[
+        ) values (
+            #{id},
+            #{username},
+            #{age}
+        )
+    ]]>
+    </insert>
+
+    <update id="update">
+    <![CDATA[
+        update user
+    ]]>
+        <set>
+            <if test="username != null and username != ''">
+            <![CDATA[
+                username = #{username},
+            ]]>
+            </if>
+            <if test="age gt 0">
+            <![CDATA[
+                age = #{age},
+            ]]>
+            </if>
+        </set>
+    <![CDATA[
+        where id = #{id}
+    ]]>
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+    <![CDATA[
+        select
+    ]]>
+        <include refid="column_all"></include>
+    <![CDATA[
+        from user order by id
+    ]]>
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+    <![CDATA[
+        select
+    ]]>
+        <include refid="column_all"></include>
+    <![CDATA[
+        from user where id = #{id}
+    ]]>
+    </select>
+
+    <delete id="deleteById">
+    <![CDATA[
+        delete from user where id = #{id}
+    ]]>
+    </delete>
+
+</mapper>
