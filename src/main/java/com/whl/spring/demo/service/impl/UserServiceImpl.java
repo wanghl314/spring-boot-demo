@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whl.spring.demo.dao.UserDao;
 import com.whl.spring.demo.entity.UserEntity;
 import com.whl.spring.demo.service.UserService;
@@ -16,8 +17,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public List<UserEntity> list() throws Exception {
-        return this.userDao.list();
+    public Page<List<UserEntity>> list(Page page) throws Exception {
+        return this.userDao.list(page);
     }
 
     @Override

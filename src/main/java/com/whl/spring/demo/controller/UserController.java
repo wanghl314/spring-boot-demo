@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whl.spring.demo.entity.UserEntity;
 import com.whl.spring.demo.service.UserService;
 import com.whl.spring.demo.vo.UserVo;
@@ -38,9 +39,9 @@ public class UserController {
         return data;
     }
 
-    @GetMapping("/list")
-    public List<UserEntity> list() throws Exception {
-        return this.userService.list();
+    @PostMapping("/list")
+    public Page<List<UserEntity>> list(@RequestBody Page page) throws Exception {
+        return this.userService.list(page);
     }
 
     @GetMapping("/getById/{id}")
