@@ -7,6 +7,9 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -18,9 +21,11 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
-public class Test {
+public class MongoDBTests {
+    private static MongoDatabase mongoDatabase;
 
-    public static void main(String[] args) throws Exception {
+    @BeforeAll
+    public static void init() {
         String authenticationDatabase = "test";
         String database = "test";
         String host = "127.0.0.1";
@@ -37,15 +42,25 @@ public class Test {
         MongoDriverInformation driverInformation = MongoDriverInformation.builder().driverName("spring-boot").build();
 
         MongoClient mongoClient = MongoClients.create(settings, driverInformation);
-        MongoDatabase mongoDatabase = mongoClient.getDatabase(database);
+        mongoDatabase = mongoClient.getDatabase(database);
+    }
 
+    @Test
+    public void testRunCommand() throws Exception {
         Resource resource = new ClassPathResource("/nosql/test.txt");
         List<String> sqlList = IOUtils.readLines(resource.getInputStream(), StandardCharsets.UTF_8);
 
         for (String sql : sqlList) {
             if (!StringUtils.isEmpty(sql)) {
-                Document result = mongoDatabase.runCommand(Document.parse(sql));
-                System.out.println("result: " + result.toJson());
+                Document result = this.mongoDatabase.runCommand(Document.parse(sql));
+                Number ok = (Number) result.get("ok");
+                Assertions.assertEquals(ok.intValue(), 1);
+
+                if (ok.intValue() == 1) {
+                    System.out.println("OK");
+                } else {
+                    System.err.println("ERROR - " + result.get("note"));
+                }
             }
         }
     }
