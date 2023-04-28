@@ -19,10 +19,12 @@
     <properties>
         <!-- org/owasp/antisamy/antisamy -->
         <antisamy.version>1.7.3</antisamy.version>
-        <!-- org.apache.commons/commons-collections4 -->
+        <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.4</commons-collections4.version>
         <!-- commons-io/commons-io -->
         <commons-io.version>2.11.0</commons-io.version>
+        <!-- org/apache/commons/commons-text -->
+        <commons-text.version>1.10.0</commons-text.version>
         <!-- com/alibaba/druid-spring-boot-starter -->
         <druid-spring.version>1.2.17</druid-spring.version>
         <java.version>17</java.version>
@@ -83,6 +85,11 @@
                 <version>${commons-collections4.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring.version}</version>
@@ -130,6 +137,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
