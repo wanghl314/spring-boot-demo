@@ -18,8 +18,6 @@ import com.whl.spring.demo.entity.UserEntity;
 import com.whl.spring.demo.service.UserService;
 import com.whl.spring.demo.vo.UserVo;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -52,9 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public int save(HttpServletRequest request, @RequestBody UserVo vo) throws Exception {
-        System.out.println(request.getParameter("aaa"));
-        System.out.println(request.getHeader("aaa"));
+    public int save(@RequestBody UserVo vo) throws Exception {
         UserEntity entity = vo.toEntity();
 
         if (entity.getId() == null) {
