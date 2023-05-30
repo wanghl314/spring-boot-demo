@@ -46,7 +46,7 @@ if [ -z "$JAVA_HOME" ]; then
     fi
   fi
   if [ -z "$JAVA_HOME" ]; then
-        error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)! jdk8 or later is better!"
+        error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)! jdk17 or later is better!"
   fi
 fi
 
