@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <!-- org/springframework/boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.1.0</version>
@@ -31,7 +32,7 @@
         <!-- com/baomidou/mybatis-plus-boot-starter -->
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
-        <mybatis-spring.version>3.0.1</mybatis-spring.version>
+        <mybatis-spring.version>3.0.2</mybatis-spring.version>
     </properties>
 
     <repositories>
@@ -187,15 +188,54 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>${basedir}/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <finalName>${project.artifactId}</finalName>
     </build>
 </project>
