@@ -17,6 +17,10 @@
             <directory>${basedir}/src/main/resources</directory>
             <outputDirectory>conf</outputDirectory>
             <fileMode>0644</fileMode>
+            <includes>
+                <include>application.properties</include>
+                <include>logback-spring.xml</include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
