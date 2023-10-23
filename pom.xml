@@ -20,6 +20,8 @@
     <properties>
         <!-- org/owasp/antisamy/antisamy -->
         <antisamy.version>1.7.4</antisamy.version>
+        <!-- com/taobao/arthas/arthas-spring-boot-starter -->
+        <arthas.version>3.7.1</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.4</commons-collections4.version>
         <!-- commons-io/commons-io -->
@@ -82,6 +84,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>com.taobao.arthas</groupId>
+                <artifactId>arthas-spring-boot-starter</artifactId>
+                <version>${arthas.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
@@ -135,6 +142,10 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.taobao.arthas</groupId>
+            <artifactId>arthas-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
