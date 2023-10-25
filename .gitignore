@@ -39,3 +39,7 @@ build/
 ### log ###
 log/
 logs/
+
+### others ###
+arthas-output/
+upload/
