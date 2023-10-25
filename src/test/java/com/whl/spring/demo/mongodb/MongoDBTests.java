@@ -47,6 +47,7 @@ public class MongoDBTests {
 
     @Test
     public void testRunCommand() throws Exception {
+        this.mongoDatabase.getCollection("test").drop();
         Resource resource = new ClassPathResource("/nosql/test.txt");
         List<String> sqlList = IOUtils.readLines(resource.getInputStream(), StandardCharsets.UTF_8);
 
