@@ -124,8 +124,6 @@ public class EncryptDecryptTests {
     }
 
     private void write(byte[] data, OutputStream os) throws IOException {
-        final String randomData = "X";
-
         try (DataOutputStream dos = new DataOutputStream(os)) {
             int dataLength = data.length;
             System.out.println("dataLength=" + dataLength);
@@ -171,7 +169,7 @@ public class EncryptDecryptTests {
 
                 for (int j = 0; j < dataLength; j++) {
                     if (i < randoms.length && j == randoms[i]) {
-                        dos.writeUTF(randomData);
+                        dos.writeUTF(RandomStringUtils.randomAlphanumeric(random.nextInt(10)));
                         i++;
                     }
                     dos.writeByte(data[j]);
