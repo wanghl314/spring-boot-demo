@@ -37,7 +37,7 @@ public class FileController {
         File[] files = new File(PATH).listFiles();
         List<FileInfo> datas = new ArrayList<FileInfo>();
 
-        if (files != null && files.length > 0) {
+        if (files != null) {
             for (File file : files) {
                 datas.add(this.build(file));
             }
@@ -51,7 +51,7 @@ public class FileController {
         String filename = file.getOriginalFilename();
         String suffix = "";
 
-        if (filename.contains(".")) {
+        if (StringUtils.contains(filename, ".")) {
             suffix = filename.substring(filename.lastIndexOf("."));
         }
         String storeFileName = UUID.randomUUID().toString() + suffix;

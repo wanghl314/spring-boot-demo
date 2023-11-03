@@ -9,7 +9,7 @@ import com.whl.spring.demo.entity.UserEntity;
 
 @Mapper
 public interface UserDao {
-    Page<List<UserEntity>> list(Page page) throws Exception;
+    Page<List<UserEntity>> list(Page<?> page) throws Exception;
 
     UserEntity getById(Long id) throws Exception;
 

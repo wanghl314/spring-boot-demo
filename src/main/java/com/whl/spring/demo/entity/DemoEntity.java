@@ -1,5 +1,6 @@
 package com.whl.spring.demo.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
         @CompoundIndex(def = "{'title':-1}", background = true)
 })
 public class DemoEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -3541676902442912629L;
+
     @Id
     private String _id;
 

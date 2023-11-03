@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/list")
-    public Page<List<UserEntity>> list(@RequestBody Page page) throws Exception {
+    public Page<List<UserEntity>> list(@RequestBody Page<?> page) throws Exception {
         return this.userService.list(page);
     }
 

@@ -1,8 +1,12 @@
 package com.whl.spring.demo.dto;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class DemoDto implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5000723429162273907L;
+
     private Long id;
 
     private String title;

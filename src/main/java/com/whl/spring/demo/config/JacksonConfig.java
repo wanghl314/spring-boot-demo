@@ -30,10 +30,10 @@ public class JacksonConfig {
         return converter;
     }
 
-    class XssJsonDeserializer extends JsonDeserializer<String> {
+    static class XssJsonDeserializer extends JsonDeserializer<String> {
         private Policy policy;
 
-        public XssJsonDeserializer(Policy policy) {
+        XssJsonDeserializer(Policy policy) {
             this.policy = policy;
         }
 

@@ -1,5 +1,6 @@
 package com.whl.spring.demo.vo;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import org.springframework.beans.BeanUtils;
@@ -7,6 +8,9 @@ import org.springframework.beans.BeanUtils;
 import com.whl.spring.demo.entity.UserEntity;
 
 public class UserVo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -9122414045682007309L;
+
     private Long id;
 
     private String username;
