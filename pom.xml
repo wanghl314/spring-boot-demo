@@ -25,14 +25,14 @@
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.4</commons-collections4.version>
         <!-- commons-io/commons-io -->
-        <commons-io.version>2.14.0</commons-io.version>
+        <commons-io.version>2.15.0</commons-io.version>
         <!-- org/apache/commons/commons-text -->
-        <commons-text.version>1.10.0</commons-text.version>
+        <commons-text.version>1.11.0</commons-text.version>
         <!-- com/alibaba/druid-spring-boot-3-starter、com/alibaba/druid -->
         <druid.version>1.2.20</druid.version>
         <java.version>17</java.version>
         <!-- com/baomidou/mybatis-plus-boot-starter -->
-        <mybatis-plus.version>3.5.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
         <mybatis-spring.version>3.0.2</mybatis-spring.version>
         <revision>1.0-SNAPSHOT</revision>
