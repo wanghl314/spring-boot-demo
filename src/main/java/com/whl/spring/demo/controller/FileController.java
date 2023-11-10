@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -33,8 +36,8 @@ public class FileController {
 
     @GetMapping("/list")
     public List<FileInfo> list(HttpServletRequest request) throws Exception {
-        final String PATH = this.getFileStoreDirectory();
-        File[] files = new File(PATH).listFiles();
+        Path path = this.getFileStorePath();
+        File[] files = new File(path.toString()).listFiles();
         List<FileInfo> datas = new ArrayList<FileInfo>();
 
         if (files != null) {
@@ -47,25 +50,29 @@ public class FileController {
 
     @PostMapping("/upload")
     public FileInfo upload(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file) throws Exception {
-        final String PATH = this.getFileStoreDirectory();
         String filename = file.getOriginalFilename();
         String suffix = "";
 
         if (StringUtils.contains(filename, ".")) {
             suffix = filename.substring(filename.lastIndexOf("."));
         }
-        String storeFileName = UUID.randomUUID().toString() + suffix;
-        File destination = new File(PATH + File.separator + storeFileName);
-        FileUtils.copyInputStreamToFile(file.getInputStream(), destination);
-        return this.build(destination);
+        Path path = this.getFileStorePath();
+        Path destination = path.resolve(UUID.randomUUID() + suffix);
+
+        if (!Files.exists(destination.getParent())) {
+            Files.createDirectory(destination.getParent());
+        }
+        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+        return this.build(destination.toFile());
     }
 
     @GetMapping("/download/{name}")
     public void download(HttpServletRequest request, HttpServletResponse response, @PathVariable String name) throws Exception {
-        final String PATH = this.getFileStoreDirectory();
-        File file = new File(PATH + File.separator + name);
+        Path path = this.getFileStorePath();
+        Path destination = path.resolve(name);
 
-        if (file.exists()) {
+        if (Files.exists(destination)) {
+            File file = destination.toFile();
             response.setHeader("Content-Type", this.getContentType(file));
             response.setHeader("Content-Disposition", "attachment; filename=" + name);
             response.setHeader("Content-Length", String.valueOf(file.length()));
@@ -97,13 +104,13 @@ public class FileController {
         return contentType;
     }
 
-    private String getFileStoreDirectory() {
+    private Path getFileStorePath() {
         String prefix = System.getProperty("demo.home");
 
         if (StringUtils.isBlank(prefix)) {
             prefix = System.getProperty("user.dir");
         }
-        return prefix + File.separator + "upload";
+        return Paths.get(prefix , "upload");
     }
 
 }
