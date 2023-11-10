@@ -1,8 +1,6 @@
 package com.whl.spring.demo.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -77,9 +74,9 @@ public class FileController {
             response.setHeader("Content-Disposition", "attachment; filename=" + name);
             response.setHeader("Content-Length", String.valueOf(file.length()));
             response.setHeader("Cache-Control", "public,max-age=604800");
-            try (InputStream is = new FileInputStream(file);
-                 OutputStream os = response.getOutputStream()) {
-                IOUtils.copyLarge(is, os);
+
+            try (OutputStream os = response.getOutputStream()) {
+                Files.copy(destination, os);
                 os.flush();
             }
             return;
@@ -98,7 +95,7 @@ public class FileController {
             try {
                 MediaType mediaType = MediaTypeFactory.getMediaType(new FileSystemResource(file)).orElse(MediaType.APPLICATION_OCTET_STREAM);
                 contentType = mediaType.toString();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return contentType;
