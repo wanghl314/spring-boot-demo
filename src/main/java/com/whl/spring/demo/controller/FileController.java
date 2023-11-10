@@ -60,7 +60,7 @@ public class FileController {
         Path destination = path.resolve(UUID.randomUUID() + suffix);
 
         if (!Files.exists(destination.getParent())) {
-            Files.createDirectory(destination.getParent());
+            Files.createDirectories(destination.getParent());
         }
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
         return this.build(destination.toFile());
