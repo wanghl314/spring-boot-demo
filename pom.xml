@@ -7,7 +7,7 @@
         <!-- org/springframework/boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.5</version>
+        <version>3.2.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -34,7 +34,7 @@
         <!-- com/baomidou/mybatis-plus-boot-starter -->
         <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
-        <mybatis-spring.version>3.0.2</mybatis-spring.version>
+        <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <revision>1.0-SNAPSHOT</revision>
     </properties>
 
@@ -80,6 +80,10 @@
                     <exclusion>
                         <groupId>com.zaxxer</groupId>
                         <artifactId>HikariCP</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis-spring</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
