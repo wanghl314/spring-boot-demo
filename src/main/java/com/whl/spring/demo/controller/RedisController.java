@@ -57,7 +57,7 @@ public class RedisController {
         if (this.storage.getStorage() <= 0) {
             return "没库存了！";
         }
-        RLock lock = this.redissonClient.getLock("reduce-storage");
+        RLock lock = this.redissonClient.getLock(StorageConfig.STORAGE_LOCK);
 
         try {
             if (lock.tryLock(1, TimeUnit.SECONDS)) {
