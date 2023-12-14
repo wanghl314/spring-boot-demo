@@ -4,13 +4,9 @@ import org.owasp.validator.html.Policy;
 import org.owasp.validator.html.PolicyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-
-import com.whl.spring.demo.filter.XssFilter;
 
 @Configuration
 public class AntisamyConfig {
@@ -29,16 +25,6 @@ public class AntisamyConfig {
             policy = Policy.getInstance();
         }
         return policy;
-    }
-
-    @Bean
-    public FilterRegistrationBean<XssFilter> xssFilter(Policy antisamyPolicy) {
-        FilterRegistrationBean<XssFilter> registration = new FilterRegistrationBean<XssFilter>();
-        registration.setName("xssFilter");
-        registration.setFilter(new XssFilter(antisamyPolicy));
-        registration.setOrder(OrderedFilter.REQUEST_WRAPPER_FILTER_MAX_ORDER);
-        registration.addUrlPatterns("/*");
-        return registration;
     }
 
 }

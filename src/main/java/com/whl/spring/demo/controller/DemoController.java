@@ -14,6 +14,7 @@ import com.whl.spring.demo.entity.DemoEntity;
 import com.whl.spring.demo.service.DemoService;
 import com.whl.spring.demo.vo.DemoVo;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -30,6 +31,23 @@ public class DemoController {
 
     @GetMapping("/test")
     public String test(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        String cookieName = "eteamsid";
+        boolean setCookie = true;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equalsIgnoreCase(cookie.getName())) {
+                    setCookie = false;
+                    break;
+                }
+            }
+        }
+
+        if (setCookie) {
+            Cookie cookie = new Cookie(cookieName, "xxx");
+            response.addCookie(cookie);
+        }
         response.setHeader("test", "test");
         return request.getServletContext().getRealPath("");
     }
