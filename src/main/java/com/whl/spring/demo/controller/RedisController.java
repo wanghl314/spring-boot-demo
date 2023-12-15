@@ -51,26 +51,25 @@ public class RedisController {
 
     @GetMapping("/reduceStorage")
     public String reduceStorage(@RequestParam(defaultValue = "1") int count) {
-        if (count <= 0) {
-            count = 1;
-        }
+        count = Math.max(count, 1);
+
         if (this.storage.getStorage() <= 0) {
             return "没库存了！";
         }
         RLock lock = this.redissonClient.getLock(StorageConfig.STORAGE_LOCK);
 
         try {
-            if (lock.tryLock(1, TimeUnit.SECONDS)) {
-                int realCount = this.storage.reduceStorage(count);
-                return "获取到" + realCount + "个库存。";
+            if (!lock.tryLock(1, TimeUnit.SECONDS)) {
+                return "人太多了，请稍后重试！";
             }
-            return "人太多了，请稍后重试！";
+            int realCount = this.storage.reduceStorage(count);
+            return "获取到" + realCount + "个库存。";
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            return "系统繁忙，请稍后重试！";
         } finally {
             lock.unlock();
         }
-        return "系统繁忙，请稍后重试！";
     }
 
 }
