@@ -3,6 +3,10 @@ package com.whl.spring.demo.entity;
 import java.io.Serial;
 import java.io.Serializable;
 
+import org.springframework.beans.BeanUtils;
+
+import com.whl.spring.demo.dto.UserDto;
+
 public class UserEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 255122426203916350L;
@@ -35,6 +39,12 @@ public class UserEntity implements Serializable {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public UserDto toDto() {
+        UserDto dto = new UserDto();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
     }
 
 }

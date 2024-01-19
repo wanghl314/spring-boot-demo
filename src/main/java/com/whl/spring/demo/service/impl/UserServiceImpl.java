@@ -1,7 +1,5 @@
 package com.whl.spring.demo.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +15,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public Page<List<UserEntity>> list(Page<?> page) throws Exception {
+    public Page<UserEntity> list(Page<?> page) throws Exception {
         return this.userDao.list(page);
     }
 

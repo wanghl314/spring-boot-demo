@@ -1,6 +1,7 @@
 package com.whl.spring.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.whl.spring.demo.dto.DemoDto;
 import com.whl.spring.demo.entity.DemoEntity;
 import com.whl.spring.demo.service.DemoService;
 import com.whl.spring.demo.vo.DemoVo;
@@ -53,13 +55,25 @@ public class DemoController {
     }
 
     @GetMapping("/list")
-    public List<DemoEntity> list() throws Exception {
-        return this.demoService.list();
+    public List<DemoDto> list() throws Exception {
+        List<DemoEntity> list = this.demoService.list();
+        List<DemoDto> result = null;
+
+        if (list != null) {
+            result = list.stream().map(DemoEntity::toDto).collect(Collectors.toList());
+        }
+        return result;
     }
 
     @GetMapping("/getById/{id}")
-    public DemoEntity getById(@PathVariable Long id) throws Exception {
-        return this.demoService.getById(id);
+    public DemoDto getById(@PathVariable Long id) throws Exception {
+        DemoEntity entity = this.demoService.getById(id);
+        DemoDto result = null;
+
+        if (entity != null) {
+            result = entity.toDto();
+        }
+        return result;
     }
 
     @PostMapping("/save")

@@ -34,7 +34,7 @@ public class DemoDaoImpl implements DemoDao {
 
     @Override
     public int create(DemoEntity demo) {
-        if (demo.getId() == null || demo.getId().longValue() <= 0) {
+        if (demo.getId() == null || demo.getId() <= 0) {
             demo.setId(RandomUtils.nextLong());
         }
         this.mongoTemplate.insert(demo);

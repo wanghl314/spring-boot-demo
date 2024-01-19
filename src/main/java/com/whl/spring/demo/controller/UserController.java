@@ -1,8 +1,8 @@
 package com.whl.spring.demo.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.whl.spring.demo.dto.UserDto;
 import com.whl.spring.demo.entity.UserEntity;
 import com.whl.spring.demo.service.UserService;
 import com.whl.spring.demo.vo.UserVo;
@@ -40,13 +41,29 @@ public class UserController {
     }
 
     @PostMapping("/list")
-    public Page<List<UserEntity>> list(@RequestBody Page<?> page) throws Exception {
-        return this.userService.list(page);
+    public Page<UserDto> list(@RequestBody Page<?> page) throws Exception {
+        Page<UserEntity> data = this.userService.list(page);
+        Page result = null;
+
+        if (data != null) {
+            result = data;
+
+            if (data.getRecords() != null) {
+                result.setRecords(data.getRecords().stream().map(UserEntity::toDto).collect(Collectors.toList()));
+            }
+        }
+        return result;
     }
 
     @GetMapping("/getById/{id}")
-    public UserEntity getById(@PathVariable Long id) throws Exception {
-        return this.userService.getById(id);
+    public UserDto getById(@PathVariable Long id) throws Exception {
+        UserEntity entity = this.userService.getById(id);
+        UserDto result = null;
+
+        if (entity != null) {
+            result = entity.toDto();
+        }
+        return result;
     }
 
     @PostMapping("/save")

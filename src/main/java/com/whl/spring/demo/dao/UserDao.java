@@ -1,7 +1,5 @@
 package com.whl.spring.demo.dao;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,7 +7,7 @@ import com.whl.spring.demo.entity.UserEntity;
 
 @Mapper
 public interface UserDao {
-    Page<List<UserEntity>> list(Page<?> page) throws Exception;
+    Page<UserEntity> list(Page<?> page) throws Exception;
 
     UserEntity getById(Long id) throws Exception;
 
