@@ -19,7 +19,7 @@
 
     <properties>
         <!-- org/owasp/antisamy/antisamy -->
-        <antisamy.version>1.7.4</antisamy.version>
+        <antisamy.version>1.7.5</antisamy.version>
         <!-- com/taobao/arthas/arthas-spring-boot-starter -->
         <arthas.version>3.7.2</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
@@ -36,7 +36,7 @@
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <!-- org/redisson/redisson -->
-        <redisson.version>3.26.0</redisson.version>
+        <redisson.version>3.26.1</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
     </properties>
 
