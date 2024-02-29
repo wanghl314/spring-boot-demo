@@ -7,7 +7,7 @@
         <!-- org/springframework/boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -38,7 +38,7 @@
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <!-- org/redisson/redisson -->
-        <redisson.version>3.27.0</redisson.version>
+        <redisson.version>3.27.1</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
     </properties>
 
