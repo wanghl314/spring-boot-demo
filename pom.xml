@@ -35,6 +35,8 @@
         <kaptcha.version>0.0.9</kaptcha.version>
         <!-- io/micrometer/micrometer-tracing-bom -->
         <micrometer-tracing.version>1.2.5</micrometer-tracing.version>
+        <!-- org/mybatis/mybatis -->
+        <mybatis.version>3.5.16</mybatis.version>
         <!-- com/baomidou/mybatis-plus-boot-starter -->
         <mybatis-plus.version>3.5.6</mybatis-plus.version>
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
@@ -121,6 +123,11 @@
                 <version>${commons-text.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring.version}</version>
@@ -199,6 +206,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
