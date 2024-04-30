@@ -1,20 +1,8 @@
 package com.whl.spring.demo.config;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.BaseConfig;
-import org.redisson.config.ClusterServersConfig;
-import org.redisson.config.Config;
-import org.redisson.config.SentinelServersConfig;
-import org.redisson.config.SingleServerConfig;
+import org.redisson.config.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -27,8 +15,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ReflectionUtils;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
-public class RedissionConfig {
+public class RedissonConfig {
     private static final String REDIS_PROTOCOL_PREFIX = "redis://";
 
     private static final String REDISS_PROTOCOL_PREFIX = "rediss://";

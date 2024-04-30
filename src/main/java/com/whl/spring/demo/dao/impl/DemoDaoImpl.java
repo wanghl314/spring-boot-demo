@@ -1,8 +1,10 @@
 package com.whl.spring.demo.dao.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.RandomUtils;
+import cn.hutool.core.lang.Snowflake;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import com.whl.spring.demo.dao.DemoDao;
+import com.whl.spring.demo.entity.DemoEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -12,15 +14,15 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-import com.whl.spring.demo.dao.DemoDao;
-import com.whl.spring.demo.entity.DemoEntity;
+import java.util.List;
 
 @Repository
 public class DemoDaoImpl implements DemoDao {
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private Snowflake snowflake;
 
     @Override
     public List<DemoEntity> list() throws Exception {
@@ -35,7 +37,7 @@ public class DemoDaoImpl implements DemoDao {
     @Override
     public int create(DemoEntity demo) {
         if (demo.getId() == null || demo.getId() <= 0) {
-            demo.setId(RandomUtils.nextLong());
+            demo.setId(this.snowflake.nextId());
         }
         this.mongoTemplate.insert(demo);
         return 1;
