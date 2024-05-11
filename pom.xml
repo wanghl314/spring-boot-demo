@@ -44,7 +44,7 @@
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <!-- org/redisson/redisson -->
-        <redisson.version>3.29.0</redisson.version>
+        <redisson.version>3.30.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
     </properties>
 
