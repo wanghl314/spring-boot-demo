@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Sentinel;
 import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContext;
@@ -109,7 +110,7 @@ public class RedissonConfig {
             String sentinelMaster = null;
 
             if (redisProperties.getSentinel() != null) {
-                Method nodesMethod = ReflectionUtils.findMethod(RedisProperties.Sentinel.class, "getNodes");
+                Method nodesMethod = ReflectionUtils.findMethod(Sentinel.class, "getNodes");
                 Object nodesValue = ReflectionUtils.invokeMethod(nodesMethod, redisProperties.getSentinel());
                 if (nodesValue instanceof String) {
                     nodes = convert(prefix, Arrays.asList(((String)nodesValue).split(",")));
@@ -152,7 +153,7 @@ public class RedissonConfig {
             }
             initSSL(c);
         } else if ((clusterMethod != null && ReflectionUtils.invokeMethod(clusterMethod, redisProperties) != null)
-                || isCluster) {
+                    || isCluster) {
 
             String[] nodes = {};
             if (clusterMethod != null && ReflectionUtils.invokeMethod(clusterMethod, redisProperties) != null) {
