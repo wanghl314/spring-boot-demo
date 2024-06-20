@@ -1,14 +1,12 @@
 package com.whl.spring.demo.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.whl.spring.demo.dao.DemoDao;
 import com.whl.spring.demo.entity.DemoEntity;
 import com.whl.spring.demo.service.DemoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DemoServiceImpl implements DemoService {
@@ -26,19 +24,19 @@ public class DemoServiceImpl implements DemoService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public int create(DemoEntity demo) throws Exception {
         return this.demoDao.create(demo);
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public int update(DemoEntity demo) throws Exception {
         return this.demoDao.update(demo);
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public int deleteById(Long id) throws Exception {
         return this.demoDao.deleteById(id);
     }
