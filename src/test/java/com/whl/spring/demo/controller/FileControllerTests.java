@@ -1,31 +1,24 @@
 package com.whl.spring.demo.controller;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Test;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 public class FileControllerTests {
 
     @Test
-    public void testURLConnection() throws IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
-        URL url = new URL("http://192.168.1.244:8080/file/upload");
+    public void testURLConnection() throws URISyntaxException, IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        URL url = new URI("http://192.168.1.244:8080/file/upload").toURL();
         String boundary = UUID.randomUUID().toString();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoInput(true);

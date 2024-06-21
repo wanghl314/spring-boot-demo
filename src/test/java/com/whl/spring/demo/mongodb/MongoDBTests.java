@@ -1,9 +1,12 @@
 package com.whl.spring.demo.mongodb;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoDriverInformation;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
@@ -13,13 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
-import com.mongodb.MongoDriverInformation;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
 
 public class MongoDBTests {
     private static MongoDatabase mongoDatabase;
@@ -47,13 +46,13 @@ public class MongoDBTests {
 
     @Test
     public void testRunCommand() throws Exception {
-        this.mongoDatabase.getCollection("test").drop();
+        mongoDatabase.getCollection("test").drop();
         Resource resource = new ClassPathResource("/nosql/test.txt");
         List<String> sqlList = IOUtils.readLines(resource.getInputStream(), StandardCharsets.UTF_8);
 
         for (String sql : sqlList) {
             if (!StringUtils.isEmpty(sql)) {
-                Document result = this.mongoDatabase.runCommand(Document.parse(sql));
+                Document result = mongoDatabase.runCommand(Document.parse(sql));
                 Number ok = (Number) result.get("ok");
                 Assertions.assertEquals(ok.intValue(), 1);
 

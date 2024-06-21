@@ -14,11 +14,18 @@
             <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/src/main/resources</directory>
+            <directory>${basedir}/assembly/conf</directory>
             <outputDirectory>conf</outputDirectory>
             <fileMode>0644</fileMode>
             <includes>
                 <include>application.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/resources</directory>
+            <outputDirectory>conf</outputDirectory>
+            <fileMode>0644</fileMode>
+            <includes>
                 <include>logback-spring.xml</include>
             </includes>
         </fileSet>
@@ -27,7 +34,7 @@
             <outputDirectory>target</outputDirectory>
             <fileMode>0755</fileMode>
             <includes>
-                <include>*.jar</include>
+                <include>${project.artifactId}.jar</include>
             </includes>
         </fileSet>
     </fileSets>
