@@ -25,7 +25,7 @@ docker run -d -p 8080:8080 -p 8563:8563 whl/spring-boot-demo
     <version>${redisson.version}</version>
 </dependency>
 ```
-如需更改底层组件需要引入下面的依赖，并移除[RedissionConfig.java](./src/main/java/com/whl/spring/demo/config/RedissionConfig.java)
+如需更改底层组件需要引入下面的依赖，并移除[RedissonConfig.java](./src/main/java/com/whl/spring/demo/config/RedissonConfig.java)
 ```xml
 <dependency>
     <groupId>org.redisson</groupId>
