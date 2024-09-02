@@ -1,12 +1,20 @@
 package com.whl.spring.demo.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = -4173511196254677517L;
@@ -21,44 +29,10 @@ public class FileInfo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date lastModified;
 
-    public FileInfo() {
-
-    }
-
-    public FileInfo(String name, long size, Date lastModified) {
-        this.name = name;
-        this.size = size;
-        this.lastModified = lastModified;
-    }
-
     public FileInfo(String name, long size, long lastModified) {
         this.name = name;
         this.size = size;
         this.lastModified = new Date(lastModified);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
     }
 
 }

@@ -1,23 +1,20 @@
 package com.whl.spring.demo.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.whl.spring.demo.bean.UserQuery;
 import com.whl.spring.demo.dto.UserDto;
 import com.whl.spring.demo.entity.UserEntity;
 import com.whl.spring.demo.service.UserService;
 import com.whl.spring.demo.vo.UserVo;
+import jakarta.validation.Valid;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -40,13 +37,13 @@ public class UserController {
         return data;
     }
 
-    @PostMapping("/list")
-    public Page<UserDto> list(@RequestBody Page<?> page) throws Exception {
-        Page<UserEntity> data = this.userService.list(page);
-        Page result = null;
+    @PostMapping(value = "/list")
+    public Page<UserDto> list(@Valid @RequestBody UserQuery query) throws Exception {
+        Page<UserDto> result = new Page<UserDto>();
+        Page<UserEntity> data = this.userService.list(new Page<UserEntity>(query.getPageNo(), query.getPageSize()));
 
         if (data != null) {
-            result = data;
+            BeanUtils.copyProperties(data, result, "records");
 
             if (data.getRecords() != null) {
                 result.setRecords(data.getRecords().stream().map(UserEntity::toDto).collect(Collectors.toList()));

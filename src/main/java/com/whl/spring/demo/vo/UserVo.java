@@ -1,12 +1,15 @@
 package com.whl.spring.demo.vo;
 
+import com.whl.spring.demo.entity.UserEntity;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.BeanUtils;
+
 import java.io.Serial;
 import java.io.Serializable;
 
-import org.springframework.beans.BeanUtils;
-
-import com.whl.spring.demo.entity.UserEntity;
-
+@Getter
+@Setter
 public class UserVo implements Serializable {
     @Serial
     private static final long serialVersionUID = -9122414045682007309L;
@@ -16,30 +19,6 @@ public class UserVo implements Serializable {
     private String username;
 
     private int age;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
 
     public UserEntity toEntity() {
         UserEntity entity = new UserEntity();

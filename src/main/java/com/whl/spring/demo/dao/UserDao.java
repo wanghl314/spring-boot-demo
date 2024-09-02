@@ -1,9 +1,8 @@
 package com.whl.spring.demo.dao;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whl.spring.demo.entity.UserEntity;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserDao {

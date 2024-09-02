@@ -1,8 +1,8 @@
 package com.whl.spring.demo.entity;
 
-import java.io.Serial;
-import java.io.Serializable;
-
+import com.whl.spring.demo.dto.DemoDto;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -10,54 +10,36 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.whl.spring.demo.dto.DemoDto;
+import java.io.Serial;
+import java.io.Serializable;
 
 @Document("demo")
 @CompoundIndexes({
         @CompoundIndex(def = "{'id':-1}", background = true, unique = true),
         @CompoundIndex(def = "{'title':-1}", background = true)
 })
+@Getter
 public class DemoEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -3541676902442912629L;
 
     @Id
-    private String _id;
+    @Field("_id")
+    private String objectId;
 
     @Field("id")
+    @Setter
     private Long id;
 
+    @Setter
     private String title;
 
+    @Setter
     private String content;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public DemoDto toDto() {
         DemoDto dto = new DemoDto();
-        BeanUtils.copyProperties(this, dto, "_id");
+        BeanUtils.copyProperties(this, dto, "objectId");
         return dto;
     }
 
