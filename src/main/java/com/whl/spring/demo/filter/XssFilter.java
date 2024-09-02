@@ -1,19 +1,13 @@
 package com.whl.spring.demo.filter;
 
-import java.io.IOException;
-
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.owasp.validator.html.Policy;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 public class XssFilter implements Filter {
-    private Policy antisamyPolicy;
+    private final Policy antisamyPolicy;
 
     public XssFilter(Policy antisamyPolicy) {
         this.antisamyPolicy = antisamyPolicy;

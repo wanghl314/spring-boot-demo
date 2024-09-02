@@ -31,7 +31,7 @@ public class JacksonConfig {
     }
 
     static class XssJsonDeserializer extends JsonDeserializer<String> {
-        private Policy policy;
+        private final Policy policy;
 
         XssJsonDeserializer(Policy policy) {
             this.policy = policy;

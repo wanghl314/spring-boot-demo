@@ -16,7 +16,7 @@ public class AntisamyConfig {
 
     @Bean
     public Policy antisamyPolicy() throws PolicyException {
-        Policy policy = null;
+        Policy policy;
 
         try {
             policy = Policy.getInstance(new ClassPathResource(POLICY_FILE).getInputStream());
