@@ -6,10 +6,10 @@ import com.whl.spring.demo.dto.UserDto;
 import com.whl.spring.demo.entity.UserEntity;
 import com.whl.spring.demo.service.UserService;
 import com.whl.spring.demo.vo.UserVo;
-import jakarta.validation.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/list")
-    public Page<UserDto> list(@Valid @RequestBody UserQuery query) throws Exception {
+    public Page<UserDto> list(@RequestBody @Validated UserQuery query) throws Exception {
         Page<UserDto> result = new Page<UserDto>();
         Page<UserEntity> data = this.userService.list(new Page<UserEntity>(query.getPageNo(), query.getPageSize()));
 
