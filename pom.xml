@@ -35,6 +35,8 @@
         <!-- cn/hutool/hutool-core -->
         <hutool.version>5.8.31</hutool.version>
         <java.version>21</java.version>
+        <!-- org/openjdk/jmh/jmh-generator-annprocess -->
+        <jmh.version>1.37</jmh.version>
         <!-- com/github/axet/kaptcha -->
         <kaptcha.version>0.0.9</kaptcha.version>
         <!-- org/projectlombok/lombok -->
@@ -146,6 +148,12 @@
                         <artifactId>HikariCP</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.owasp.antisamy</groupId>
@@ -297,6 +305,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
         </dependency>
     </dependencies>
 
