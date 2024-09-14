@@ -33,7 +33,7 @@
         <!-- com/alibaba/druid-spring-boot-3-starter -->
         <druid.version>1.2.23</druid.version>
         <!-- cn/hutool/hutool-core -->
-        <hutool.version>5.8.31</hutool.version>
+        <hutool.version>5.8.32</hutool.version>
         <java.version>21</java.version>
         <!-- org/openjdk/jmh/jmh-generator-annprocess -->
         <jmh.version>1.37</jmh.version>
@@ -48,7 +48,7 @@
         <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <!-- org/redisson/redisson -->
-        <redisson.version>3.35.0</redisson.version>
+        <redisson.version>3.36.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
         <!-- org/springdoc/springdoc-openapi-starter-webmvc-api、org/springdoc/springdoc-openapi-starter-webmvc-ui -->
         <springdoc-openapi.version>2.6.0</springdoc-openapi.version>
