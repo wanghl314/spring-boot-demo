@@ -83,7 +83,7 @@ public class RedissonConfig {
         if (timeoutValue instanceof Duration) {
             timeout = (int) ((Duration) timeoutValue).toMillis();
         } else if (timeoutValue != null){
-            timeout = (Integer)timeoutValue;
+            timeout = (Integer) timeoutValue;
         }
 
         Integer connectTimeout = null;
@@ -113,9 +113,9 @@ public class RedissonConfig {
                 Method nodesMethod = ReflectionUtils.findMethod(Sentinel.class, "getNodes");
                 Object nodesValue = ReflectionUtils.invokeMethod(nodesMethod, redisProperties.getSentinel());
                 if (nodesValue instanceof String) {
-                    nodes = convert(prefix, Arrays.asList(((String)nodesValue).split(",")));
+                    nodes = convert(prefix, Arrays.asList(((String) nodesValue).split(",")));
                 } else {
-                    nodes = convert(prefix, (List<String>)nodesValue);
+                    nodes = convert(prefix, (List<String>) nodesValue);
                 }
                 sentinelMaster = redisProperties.getSentinel().getMaster();
             }
