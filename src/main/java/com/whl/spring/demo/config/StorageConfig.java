@@ -1,5 +1,6 @@
 package com.whl.spring.demo.config;
 
+import lombok.Getter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
@@ -18,14 +19,11 @@ public class StorageConfig {
 
     private static Logger logger = LoggerFactory.getLogger(StorageConfig.class);
 
+    @Getter
     private int storage = DEFAULT_AMOUNT;
 
     @Autowired
     private RedissonClient redissonClient;
-
-    public int getStorage() {
-        return storage;
-    }
 
     public int reduceStorage() {
         return this.reduceStorage(1);

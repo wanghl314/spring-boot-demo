@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
@@ -36,7 +37,7 @@ public class TransactionConfig {
             transactionManager = new DataSourceTransactionManager(dataSource);
         }
         transactionManagerCustomizers.ifAvailable((customizers) -> {
-            customizers.customize(transactionManager);
+            customizers.customize((TransactionManager) transactionManager);
         });
         return transactionManager;
     }

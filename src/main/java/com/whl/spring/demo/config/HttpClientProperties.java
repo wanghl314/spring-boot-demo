@@ -2,7 +2,6 @@ package com.whl.spring.demo.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.hc.core5.http.HttpHost;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
@@ -16,7 +15,7 @@ public class HttpClientProperties {
     @Getter
     @Setter
     public static class Proxy {
-        private String scheme = HttpHost.DEFAULT_SCHEME.id;
+        private String scheme = "http";
 
         private String host;
 

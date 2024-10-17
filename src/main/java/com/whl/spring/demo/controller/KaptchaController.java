@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,8 +38,13 @@ public class KaptchaController {
             @Parameter(name = "key", in = ParameterIn.QUERY, required = true, description = "客户端标识，需客户端生成并保存，提交验证码的时候将key也传到后台")
     })
     public void index(HttpServletResponse response, @RequestParam String key) throws Exception {
+        if (MapUtils.size(CACHE) >= 10000) {
+            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+            response.getOutputStream().write("请求超过限制，请稍后重试！".getBytes(StandardCharsets.UTF_8));
+            return;
+        }
         response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/jpeg");
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         String kaptcha = this.producer.createText();
         CACHE.put(key, kaptcha);
         BufferedImage image = this.producer.createImage(kaptcha);
