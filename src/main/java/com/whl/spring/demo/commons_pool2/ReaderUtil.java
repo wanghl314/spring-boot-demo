@@ -51,7 +51,7 @@ public class ReaderUtil {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         StringBufferFactory factory = new StringBufferFactory();
         GenericObjectPoolConfig<StringBuffer> config = new GenericObjectPoolConfig<StringBuffer>();
         config.setMinIdle(5);
@@ -62,12 +62,13 @@ public class ReaderUtil {
         Thread[] threads = new Thread[100];
 
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Thread(new ReadTask(readerUtil, i));
+            threads[i] = Thread.ofVirtual().unstarted(new ReadTask(readerUtil, i));
         }
 
         for (Thread thread : threads) {
             thread.start();
         }
+        Thread.sleep(5000);
     }
 
     static class ReadTask implements Runnable {
