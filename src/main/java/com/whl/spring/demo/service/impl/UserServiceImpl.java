@@ -25,14 +25,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public int create(UserEntity demo) throws Exception {
-        return this.userDao.create(demo);
+    public int create(UserEntity user) throws Exception {
+        return this.userDao.create(user);
     }
 
     @Override
     @Transactional
-    public int update(UserEntity demo) throws Exception {
-        return this.userDao.update(demo);
+    public int update(UserEntity user) throws Exception {
+        return this.userDao.update(user);
     }
 
     @Override

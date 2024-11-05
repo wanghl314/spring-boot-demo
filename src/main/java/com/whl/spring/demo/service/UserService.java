@@ -8,9 +8,9 @@ public interface UserService {
 
     UserEntity getById(Long id) throws Exception;
 
-    int create(UserEntity demo) throws Exception;
+    int create(UserEntity user) throws Exception;
 
-    int update(UserEntity demo) throws Exception;
+    int update(UserEntity user) throws Exception;
 
     int deleteById(Long id) throws Exception;
 }
