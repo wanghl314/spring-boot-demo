@@ -1,9 +1,11 @@
 package com.whl.spring.demo.entity;
 
+import com.whl.spring.demo.dto.TestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,8 +22,10 @@ public class TestEntity implements Serializable {
 
     private String test;
 
-    public TestEntity(String test) {
-        this.test = test;
+    public TestDto toDto() {
+        TestDto dto = new TestDto();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
     }
 
 }
