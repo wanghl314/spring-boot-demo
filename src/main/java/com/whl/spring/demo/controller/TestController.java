@@ -72,7 +72,7 @@ public class TestController {
         TestEntity entity = vo.toEntity();
 
         if (entity.getId() == null) {
-            if (StringUtils.isNotBlank(entity.getTest())) {
+            if (StringUtils.isBlank(entity.getTest()) && new Random().nextBoolean()) {
                 entity.setTest("啊".repeat(100000));
             }
             return this.testService.create(entity);
