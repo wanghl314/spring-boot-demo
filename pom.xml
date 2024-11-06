@@ -43,10 +43,10 @@
         <lombok.version>1.18.34</lombok.version>
         <!-- org/mybatis/mybatis -->
         <mybatis.version>3.5.16</mybatis.version>
-        <!-- com/baomidou/mybatis-plus-boot-starter -->
-        <mybatis-plus.version>3.5.8</mybatis-plus.version>
-        <!-- org/mybatis/spring/boot/mybatis-spring-boot-starter -->
-        <mybatis-spring.version>3.0.3</mybatis-spring.version>
+        <!-- com/baomidou/mybatis-plus-bom -->
+        <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <!-- org/mybatis/mybatis-spring -->
+        <mybatis-spring.version>3.0.4</mybatis-spring.version>
         <!-- org/redisson/redisson -->
         <redisson.version>3.38.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
@@ -90,18 +90,10 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-bom</artifactId>
                 <version>${mybatis-plus.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.zaxxer</groupId>
-                        <artifactId>HikariCP</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.mybatis</groupId>
-                        <artifactId>mybatis-spring</artifactId>
-                    </exclusion>
-                </exclusions>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.github.axet</groupId>
@@ -139,15 +131,9 @@
                 <version>${mybatis.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis-spring.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.zaxxer</groupId>
-                        <artifactId>HikariCP</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
@@ -198,7 +184,17 @@
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.axet</groupId>
@@ -258,8 +254,8 @@
             <artifactId>mybatis</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
