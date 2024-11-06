@@ -1,21 +1,18 @@
 package com.whl.spring.demo.controller;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.whl.spring.demo.entity.TestEntity;
+import com.whl.spring.demo.service.TestService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/test")
 public class TestController {
+    @Autowired
+    private TestService testService;
 
     @PostMapping({"", "/"})
     public Map<String, Map<String, ?>> index(HttpServletRequest request, @RequestBody Map<String, ?> vo) throws Exception {
@@ -34,6 +31,13 @@ public class TestController {
         result.put("request", requestMap);
         result.put("body", vo);
         return result;
+    }
+
+    @GetMapping("/oracle")
+    public TestEntity test() throws Exception {
+        TestEntity entity = new TestEntity("啊".repeat(100000));
+        this.testService.create(entity);
+        return this.testService.getById(entity.getId());
     }
 
 }

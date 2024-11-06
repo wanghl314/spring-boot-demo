@@ -2,63 +2,41 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.whl.spring.demo.dao.UserDao">
+<mapper namespace="com.whl.spring.demo.dao.TestDao">
 
-    <resultMap type="com.whl.spring.demo.entity.UserEntity" id="BaseResultMap">
+    <resultMap type="com.whl.spring.demo.entity.TestEntity" id="BaseResultMap">
         <id property="id" column="id" />
-        <result property="username" column="username" />
-        <result property="age" column="age" />
+        <result property="test" column="test" />
     </resultMap>
 
     <sql id="column_all">
     <![CDATA[
         id,
-        username,
-        age
+        test
     ]]>
     </sql>
 
     <insert id="create">
     <![CDATA[
-        insert into sbd_user (
+        insert into sbd_test (
     ]]>
         <include refid="column_all"></include>
     <![CDATA[
         ) values (
             #{id},
-            #{username},
-            #{age}
-        )
-    ]]>
-    </insert>
-
-    <insert id="create" databaseId="oracle">
-    <![CDATA[
-        insert into sbd_user (
-    ]]>
-        <include refid="column_all"></include>
-    <![CDATA[
-        ) values (
-            seq_user.nextval,
-            #{username},
-            #{age}
+            #{test}
         )
     ]]>
     </insert>
 
     <update id="update">
     <![CDATA[
-        update sbd_user
+        update sbd_test
     ]]>
         <set>
-            <if test="username != null and username != ''">
+            <if test="test != null and test != ''">
             <![CDATA[
-                username = #{username},
-            ]]>
-            </if>
-            <if test="age gt 0">
-            <![CDATA[
-                age = #{age},
+                test = #{test},
             ]]>
             </if>
         </set>
@@ -73,7 +51,7 @@
     ]]>
         <include refid="column_all"></include>
     <![CDATA[
-        from sbd_user order by id
+        from sbd_test order by id
     ]]>
     </select>
 
@@ -83,13 +61,13 @@
     ]]>
         <include refid="column_all"></include>
     <![CDATA[
-        from sbd_user where id = #{id}
+        from sbd_test where id = #{id}
     ]]>
     </select>
 
     <delete id="deleteById">
     <![CDATA[
-        delete from sbd_user where id = #{id}
+        delete from sbd_test where id = #{id}
     ]]>
     </delete>
 
