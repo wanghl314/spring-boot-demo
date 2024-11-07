@@ -18,7 +18,7 @@
     ]]>
     </sql>
 
-    <insert id="create">
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
     <![CDATA[
         insert into sbd_user (
     ]]>
@@ -33,13 +33,18 @@
     </insert>
 
     <insert id="create" databaseId="oracle">
+        <selectKey keyProperty="id" resultType="long" order="BEFORE">
+        <![CDATA[
+            select seq_user.nextval from dual
+        ]]>
+        </selectKey>
     <![CDATA[
         insert into sbd_user (
     ]]>
         <include refid="column_all"></include>
     <![CDATA[
         ) values (
-            seq_user.nextval,
+            #{id},
             #{username},
             #{age}
         )

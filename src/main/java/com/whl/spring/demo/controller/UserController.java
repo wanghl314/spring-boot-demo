@@ -64,14 +64,20 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public int save(@RequestBody UserVo vo) throws Exception {
+    public UserDto save(@RequestBody UserVo vo) throws Exception {
         UserEntity entity = vo.toEntity();
+        int result;
 
         if (entity.getId() == null) {
-            return this.userService.create(entity);
+            result = this.userService.create(entity);
         } else {
-            return this.userService.update(entity);
+            result = this.userService.update(entity);
         }
+
+        if (result > 0) {
+            return entity.toDto();
+        }
+        return null;
     }
 
     @GetMapping("/deleteById/{id}")
