@@ -48,18 +48,12 @@ public class CustomApplicationListener implements GenericApplicationListener {
                     validationQuery = "select 1 from dual";
                 } else {
                     validationQuery = "select 1";
-                }
-                String filters;
 
-                if (dbType == DbType.dm) {
-                    filters = "config,stat";
-                } else {
-                    filters = "config,stat,wall";
+                    if (dbType == DbType.dm) {
+                        System.setProperty("spring.datasource.druid.filter.wall.enabled", "false");
+                    }
                 }
                 System.setProperty("spring.datasource.druid.validation-query", validationQuery);
-                System.setProperty("spring.datasource.druid.filters", filters);
-                System.out.println(environment.getProperty("spring.datasource.druid.validation-query"));
-                System.out.println(environment.getProperty("spring.datasource.druid.filters"));
             }
         }
     }
