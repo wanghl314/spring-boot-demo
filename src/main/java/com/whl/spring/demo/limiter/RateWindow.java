@@ -20,8 +20,7 @@ public class RateWindow<T extends TimeBasedRateValue> {
         this.value.incr();
     }
 
-    public void reset(long time) {
-        this.time = time;
+    public void reset() {
         this.value.reset();
     }
 

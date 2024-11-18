@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +58,9 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
 
     @Override
     protected void deprecated(RateWindow<?> window) {
-        this.redisTemplate.expire(this.name + ":" + window.time(), Duration.ofSeconds(10));
+        if (window != null) {
+            window.reset();
+        }
     }
 
     @Override

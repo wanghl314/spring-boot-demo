@@ -43,12 +43,11 @@ public class RedisTimeBasedRateValue implements TimeBasedRateValue {
     @Override
     public void incr() {
         this.redisTemplate.opsForValue().increment(this.key);
-        this.redisTemplate.expire(this.key, (this.expire != null && this.expire != Duration.ZERO) ? this.expire : DEFAULT_EXPIRE);
     }
 
     @Override
     public void reset() {
-        this.redisTemplate.opsForValue().set(key, 0);
+        this.redisTemplate.expire(this.key, (this.expire != null && this.expire != Duration.ZERO) ? this.expire : DEFAULT_EXPIRE);
     }
 
     @Override
