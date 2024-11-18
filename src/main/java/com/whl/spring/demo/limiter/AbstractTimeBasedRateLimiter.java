@@ -24,9 +24,9 @@ public abstract class AbstractTimeBasedRateLimiter implements TimeBasedRateLimit
     protected int sampleCount;
 
     public AbstractTimeBasedRateLimiter(String name, int intervalInMs, long limit) {
-        Assert.isTrue(intervalInMs >= WINDOW_LENGTH_IN_MS, "total time interval of the sliding window should be no less then " + WINDOW_LENGTH_IN_MS);
+        Assert.isTrue(intervalInMs >= WINDOW_LENGTH_IN_MS, "intervalInMs should be no less then " + WINDOW_LENGTH_IN_MS);
+        Assert.isTrue(intervalInMs % WINDOW_LENGTH_IN_MS == 0, "intervalInMs must be divided by " + WINDOW_LENGTH_IN_MS);
         Assert.isTrue(limit > 0, "limit should be positive");
-        Assert.isTrue(intervalInMs % WINDOW_LENGTH_IN_MS == 0, "time span needs to be evenly divided");
         this.name = name;
         this.intervalInMs = intervalInMs;
         this.limit = limit;

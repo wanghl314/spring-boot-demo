@@ -5,18 +5,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 
-public class RedisKeyBasedRateValue implements KeyBasedRateValue {
+public class RedisKeyTimeBasedRateValue implements KeyBasedRateValue {
     private final RedisTemplate<String, Number> redisTemplate;
 
     private Duration expire;
 
     @SuppressWarnings("unchecked")
-    public RedisKeyBasedRateValue(RedisTemplate<?, ?> redisTemplate) {
+    public RedisKeyTimeBasedRateValue(RedisTemplate<?, ?> redisTemplate) {
         this.redisTemplate = (RedisTemplate<String, Number>) redisTemplate;
     }
 
     @SuppressWarnings("unchecked")
-    public RedisKeyBasedRateValue(RedisTemplate<?, ?> redisTemplate, Duration expire) {
+    public RedisKeyTimeBasedRateValue(RedisTemplate<?, ?> redisTemplate, Duration expire) {
         this.redisTemplate = (RedisTemplate<String, Number>) redisTemplate;
         this.expire = expire;
     }

@@ -55,6 +55,7 @@ public class RedisTimeBasedRateValue implements TimeBasedRateValue {
     public String toString() {
         return "RedisTimeBasedRateValue{" +
                 "key='" + key + '\'' +
+                ", expire='" + expire + '\'' +
                 ", value='" + this.get() + '\'' +
                 '}';
     }

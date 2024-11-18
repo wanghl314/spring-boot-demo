@@ -2,11 +2,32 @@ package com.whl.spring.demo.limiter.redis;
 
 import com.whl.spring.demo.limiter.DefaultRateLimiter;
 import com.whl.spring.demo.limiter.KeyBasedRateValue;
+import lombok.Getter;
+import org.springframework.util.Assert;
 
-public class RedisKeyBasedRateLimiter extends DefaultRateLimiter {
+@Getter
+public class RedisKeyTimeBasedRateLimiter extends DefaultRateLimiter {
+    private final int intervalInMs;
 
-    public RedisKeyBasedRateLimiter(String name, int intervalInMs, long limit, KeyBasedRateValue value) {
-        super(name, intervalInMs, limit, value);
+    public RedisKeyTimeBasedRateLimiter(String name, int intervalInMs, long limit, KeyBasedRateValue value) {
+        super(name, limit, value);
+        Assert.isTrue(intervalInMs > 0, "intervalInMs should be positive");
+        this.intervalInMs = intervalInMs;
+    }
+
+    @Override
+    public long passed(String key) {
+        return this.value.get(this.name + ":" + key + ":" + this.index());
+    }
+
+    @Override
+    public void incr(String key) {
+        this.value.incr(this.name + ":" + key + ":" + this.index());
+    }
+
+    @Override
+    public void reset(String key) {
+        this.value.reset(this.name + ":" + key + ":" + this.index());
     }
 
     public String htmlStat(String key) {
@@ -28,6 +49,10 @@ public class RedisKeyBasedRateLimiter extends DefaultRateLimiter {
         builder.append("</tr>");
         builder.append("</tbody");
         return builder.toString();
+    }
+
+    private String index() {
+        return String.valueOf(System.currentTimeMillis() / this.getIntervalInMs());
     }
 
 }

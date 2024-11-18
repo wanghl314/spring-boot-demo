@@ -2,8 +2,8 @@ package com.whl.spring.demo.config;
 
 import com.whl.spring.demo.limiter.KeyBasedRateLimiter;
 import com.whl.spring.demo.limiter.TimeBasedRateLimiter;
-import com.whl.spring.demo.limiter.redis.RedisKeyBasedRateLimiter;
-import com.whl.spring.demo.limiter.redis.RedisKeyBasedRateValue;
+import com.whl.spring.demo.limiter.redis.RedisKeyTimeBasedRateLimiter;
+import com.whl.spring.demo.limiter.redis.RedisKeyTimeBasedRateValue;
 import com.whl.spring.demo.limiter.redis.RedisTimeBasedRateLimiter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RateLimiterConfig {
 
     @Bean
     public KeyBasedRateLimiter dingTalkAgent() {
-        return new RedisKeyBasedRateLimiter("DingTalk-Agent", 1000, 20, new RedisKeyBasedRateValue(this.redisTemplate));
+        return new RedisKeyTimeBasedRateLimiter("DingTalk-Agent", 1000, 20, new RedisKeyTimeBasedRateValue(this.redisTemplate));
     }
 
     @Bean

@@ -9,19 +9,15 @@ public class DefaultRateLimiter implements KeyBasedRateLimiter {
     protected String name;
 
     @Getter
-    protected int intervalInMs;
-
-    @Getter
     protected long limit;
 
     @Setter
     protected KeyBasedRateValue value;
 
-    public DefaultRateLimiter(String name, int intervalInMs, long limit, KeyBasedRateValue value) {
-        Assert.isTrue(intervalInMs > 0, "total time interval of the sliding window should be positive");
+    public DefaultRateLimiter(String name, long limit, KeyBasedRateValue value) {
         Assert.isTrue(limit > 0, "limit should be positive");
+        Assert.notNull(value, "value should be not null");
         this.name = name;
-        this.intervalInMs = intervalInMs;
         this.limit = limit;
         this.value = value;
     }
@@ -33,31 +29,25 @@ public class DefaultRateLimiter implements KeyBasedRateLimiter {
 
     @Override
     public long passed(String key) {
-        return this.value.get(this.name + ":" + key + ":" + this.index());
+        return this.value.get(this.name + ":" + key);
     }
 
     @Override
     public void incr(String key) {
-        this.value.incr(this.name + ":" + key + ":" + this.index());
+        this.value.incr(this.name + ":" + key);
     }
 
     @Override
     public void reset(String key) {
-        this.value.reset(this.name + ":" + key + ":" + this.index());
+        this.value.reset(this.name + ":" + key);
     }
 
     @Override
     public String toString() {
         return "DefaultRateLimiter{" +
                 "name='" + name + '\'' +
-                ", intervalInMs=" + intervalInMs +
                 ", limit=" + limit +
-                ", value=" + value +
                 '}';
-    }
-
-    private String index() {
-        return String.valueOf(System.currentTimeMillis() / this.getIntervalInMs());
     }
 
 }
