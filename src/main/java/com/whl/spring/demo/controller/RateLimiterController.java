@@ -3,7 +3,7 @@ package com.whl.spring.demo.controller;
 import com.whl.spring.demo.limiter.KeyBasedRateLimiter;
 import com.whl.spring.demo.limiter.RateWindow;
 import com.whl.spring.demo.limiter.TimeBasedRateLimiter;
-import com.whl.spring.demo.limiter.redis.RedisKeyBasedRateLimiter;
+import com.whl.spring.demo.limiter.redis.RedisKeyTimeBasedRateLimiter;
 import com.whl.spring.demo.limiter.redis.RedisTimeBasedRateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +50,7 @@ public class RateLimiterController {
         StringBuilder builder = new StringBuilder();
 
         for (KeyBasedRateLimiter limiter : this.keyLimiters) {
-            builder.append(((RedisKeyBasedRateLimiter) limiter).htmlStat(key));
+            builder.append(((RedisKeyTimeBasedRateLimiter) limiter).htmlStat(key));
             builder.append("<br/>");
         }
 
