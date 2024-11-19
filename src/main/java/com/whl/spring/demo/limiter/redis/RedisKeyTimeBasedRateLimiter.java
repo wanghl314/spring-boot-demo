@@ -31,23 +31,36 @@ public class RedisKeyTimeBasedRateLimiter extends DefaultRateLimiter {
     }
 
     public String htmlStat(String key) {
+        String displayKey = key + ":" + this.index();
+        long passed = this.passed(key);
         StringBuilder builder = new StringBuilder();
         builder.append("<table border=\"1\" style=\"border-collapse:collapse;\">");
-        builder.append("<thead>");
-        builder.append("<tr>");
-        builder.append("<th colspan=\"2\" style=\"padding:5px;\">");
+        builder.append("  <thead>");
+        builder.append("    <tr>");
+        builder.append("      <th colspan=\"2\" style=\"padding:5px;\">");
         builder.append(this.getName());
         builder.append("</th>");
-        builder.append("</tr>");
-        builder.append("</thead>");
-        builder.append("<tbody>");
-        builder.append("<tr>");
-        builder.append("<td style=\"padding:5px;\">passedCount</td>");
-        builder.append("<td style=\"padding:5px;\">");
-        builder.append(this.passed(key));
+        builder.append("    </tr>");
+        builder.append("  </thead>");
+        builder.append("  <tbody>");
+        builder.append("    <tr>");
+        builder.append("      <td style=\"padding:5px;\">");
+        builder.append(displayKey);
         builder.append("</td>");
-        builder.append("</tr>");
-        builder.append("</tbody");
+        builder.append("      <td style=\"padding:5px;\">");
+        builder.append(passed);
+        builder.append("</td>");
+        builder.append("    </tr>");
+        builder.append("  </tbody>");
+        builder.append("  <tfoot>");
+        builder.append("    <tr>");
+        builder.append("      <th style=\"padding:5px;\">totalPassed</th>");
+        builder.append("      <th style=\"padding:5px;\">");
+        builder.append(passed);
+        builder.append("</th>");
+        builder.append("    </tr>");
+        builder.append("  </tfoot>");
+        builder.append("</table>");
         return builder.toString();
     }
 

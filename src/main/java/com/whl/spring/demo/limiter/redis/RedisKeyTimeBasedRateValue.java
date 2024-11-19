@@ -38,12 +38,22 @@ public class RedisKeyTimeBasedRateValue implements KeyBasedRateValue {
 
     @Override
     public void incr(String key) {
-        this.redisTemplate.opsForValue().increment(key);
+        Number value = this.redisTemplate.opsForValue().increment(key);
+
+        if (value != null && value.longValue() == 1L) {
+            this.expire(key);
+        }
+    }
+
+    @Override
+    public void expire(String key) {
+        this.redisTemplate.expire(key, (this.expire != null && this.expire != Duration.ZERO) ? this.expire : DEFAULT_EXPIRE);
     }
 
     @Override
     public void reset(String key) {
-        this.redisTemplate.expire(key, (this.expire != null && this.expire != Duration.ZERO) ? this.expire : DEFAULT_EXPIRE);
+        this.redisTemplate.opsForValue().set(key, 0);
+        this.expire(key);
     }
 
 }

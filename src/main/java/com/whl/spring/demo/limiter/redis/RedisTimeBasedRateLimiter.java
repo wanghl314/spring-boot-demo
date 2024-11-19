@@ -59,7 +59,7 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
     @Override
     protected void deprecated(RateWindow<?> window) {
         if (window != null) {
-            window.reset();
+            window.expire();
         }
     }
 
@@ -76,24 +76,24 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
     public String htmlStat() {
         StringBuilder builder = new StringBuilder();
         builder.append("<table border=\"1\" style=\"border-collapse:collapse;\">");
-        builder.append("<thead>");
-        builder.append("<tr>");
-        builder.append("<th colspan=\"2\" style=\"padding:5px;\">");
+        builder.append("  <thead>");
+        builder.append("    <tr>");
+        builder.append("      <th colspan=\"2\" style=\"padding:5px;\">");
         builder.append(this.getName());
         builder.append("</th>");
-        builder.append("</tr>");
-        builder.append("</thead>");
-        builder.append("<tbody>");
+        builder.append("    </tr>");
+        builder.append("  </thead>");
+        builder.append("  <tbody>");
         List<RateWindow<?>> statistics = this.statistics();
-        long passedCount = 0;
+        long totalPassed = 0;
 
         for (RateWindow<?> window : statistics) {
             if (window != null) {
                 long time = window.time();
                 long passed = window.get();
-                passedCount += passed;
-                builder.append("<tr>");
-                builder.append("<td style=\"padding:5px;\">");
+                totalPassed += passed;
+                builder.append("    <tr>");
+                builder.append("      <td style=\"padding:5px;\">");
 
                 if (time % 1000 == 0) {
                     builder.append(window.time() / 1000);
@@ -101,19 +101,22 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
                     builder.append(window.time());
                 }
                 builder.append("</td>");
-                builder.append("<td style=\"padding:5px;\">");
+                builder.append("      <td style=\"padding:5px;\">");
                 builder.append(passed);
                 builder.append("</td>");
-                builder.append("</tr>");
+                builder.append("    </tr>");
             }
         }
-        builder.append("<tr>");
-        builder.append("<td style=\"padding:5px;\">passedCount</td>");
-        builder.append("<td style=\"padding:5px;\">");
-        builder.append(passedCount);
-        builder.append("</td>");
-        builder.append("</tr>");
-        builder.append("</tbody");
+        builder.append("  </tbody>");
+        builder.append("  <tfoot>");
+        builder.append("    <tr>");
+        builder.append("      <th style=\"padding:5px;\">totalPassed</th>");
+        builder.append("      <th style=\"padding:5px;\">");
+        builder.append(totalPassed);
+        builder.append("</th>");
+        builder.append("    </tr>");
+        builder.append("  </tfoot>");
+        builder.append("</table>");
         return builder.toString();
     }
 

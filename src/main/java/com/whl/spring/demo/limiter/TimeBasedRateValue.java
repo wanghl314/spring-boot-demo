@@ -5,5 +5,7 @@ public interface TimeBasedRateValue extends RateValue {
 
     void incr();
 
+    void expire();
+
     void reset();
 }

@@ -20,6 +20,10 @@ public class RateWindow<T extends TimeBasedRateValue> {
         this.value.incr();
     }
 
+    public void expire() {
+        this.value.expire();
+    }
+
     public void reset() {
         this.value.reset();
     }

@@ -5,5 +5,7 @@ public interface KeyBasedRateValue extends RateValue {
 
     void incr(String key);
 
+    void expire(String key);
+
     void reset(String key);
 }
