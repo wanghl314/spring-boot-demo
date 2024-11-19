@@ -15,9 +15,7 @@ public interface TimeBasedRateLimiter extends RateLimiter {
 
     List<RateWindow<?>> statistics();
 
-    default void init() {
-    }
+    void init();
 
-    default void persist() {
-    }
+    void persist();
 }

@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
@@ -37,6 +38,7 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
 
     @Override
     public void persist() {
+        String key = this.name + ":persist";
         List<Long> data = new ArrayList<>();
 
         for (int i = 0; i < this.array.length(); i++) {
@@ -48,7 +50,8 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
                 data.add(null);
             }
         }
-        this.redisTemplate.opsForValue().set(this.name + ":persist", data);
+        this.redisTemplate.opsForValue().set(key, data);
+        this.redisTemplate.expire(key, RedisTimeBasedRateValue.DEFAULT_EXPIRE.getSeconds() * 2, TimeUnit.SECONDS);
     }
 
     @Override

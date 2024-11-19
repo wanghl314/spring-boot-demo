@@ -34,34 +34,6 @@ public abstract class AbstractTimeBasedRateLimiter implements TimeBasedRateLimit
         this.array = new AtomicReferenceArray<>(this.sampleCount);
     }
 
-    public void sliding(long currentTime) {
-        int idx = this.calculateTimeIdx(currentTime);
-        long time = this.calculateTime(currentTime);
-        RateWindow<?> old = this.array.get(idx);
-
-        if (old == null) {
-            RateWindow<?> window = this.newWindow(time);
-            this.array.compareAndSet(idx, null, window);
-        } else if (old.time() != time) {
-            RateWindow<?> window = this.newWindow(time);
-            this.array.compareAndSet(idx, old, window);
-            this.deprecated(old);
-        }
-        this.persist();
-    }
-
-    public RateWindow<?> currentWindow(long currentTime) {
-        int idx = this.calculateTimeIdx(currentTime);
-        long time = this.calculateTime(currentTime);
-        RateWindow<?> window = this.array.get(idx);
-
-        if (window == null) {
-            window = this.newWindow(time);
-            this.array.compareAndSet(idx, null, window);
-        }
-        return window;
-    }
-
     @Override
     public boolean limit() {
         return this.passed() >= this.limit;
@@ -81,6 +53,37 @@ public abstract class AbstractTimeBasedRateLimiter implements TimeBasedRateLimit
         return passed;
     }
 
+    @Override
+    public RateWindow<?> currentWindow(long currentTime) {
+        int idx = this.calculateTimeIdx(currentTime);
+        long time = this.calculateTime(currentTime);
+        RateWindow<?> window = this.array.get(idx);
+
+        if (window == null) {
+            window = this.newWindow(time);
+            this.array.compareAndSet(idx, null, window);
+        }
+        return window;
+    }
+
+    @Override
+    public void sliding(long currentTime) {
+        int idx = this.calculateTimeIdx(currentTime);
+        long time = this.calculateTime(currentTime);
+        RateWindow<?> old = this.array.get(idx);
+
+        if (old == null) {
+            RateWindow<?> window = this.newWindow(time);
+            this.array.compareAndSet(idx, null, window);
+        } else if (old.time() != time) {
+            RateWindow<?> window = this.newWindow(time);
+            this.array.compareAndSet(idx, old, window);
+            this.deprecated(old);
+        }
+        this.persist();
+    }
+
+    @Override
     public List<RateWindow<?>> statistics() {
         List<RateWindow<?>> windows = new ArrayList<>(this.sampleCount);
 
@@ -88,6 +91,14 @@ public abstract class AbstractTimeBasedRateLimiter implements TimeBasedRateLimit
             windows.add(this.array.get(i));
         }
         return windows;
+    }
+
+    @Override
+    public void init() {
+    }
+
+    @Override
+    public void persist() {
     }
 
     @Override
