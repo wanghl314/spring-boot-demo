@@ -55,8 +55,10 @@ public class RateLimiterV1Controller {
         }
 
         for (TimeBasedRateLimiter limiter : this.timeLimiters) {
-            builder.append(((RedisTimeBasedRateLimiter) limiter).htmlStat());
-            builder.append("<br/>");
+            if (limiter instanceof RedisTimeBasedRateLimiter limiter1) {
+                builder.append(limiter1.htmlStat());
+                builder.append("<br/>");
+            }
         }
         return builder.toString();
     }

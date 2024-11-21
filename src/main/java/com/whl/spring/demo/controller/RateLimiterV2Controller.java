@@ -1,6 +1,7 @@
 package com.whl.spring.demo.controller;
 
 import com.whl.spring.demo.limiter.v2.RateWindow;
+import com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter;
 import com.whl.spring.demo.limiter.v2.redis.RedisRateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +21,10 @@ public class RateLimiterV2Controller {
     @Autowired
     @Qualifier("dingTalkApiV2")
     private RedisRateLimiter apiLimiter;
+
+    @Autowired
+    @Qualifier("atomicLongTestV2")
+    private AtomicLongRateLimiter atomicLongLimiter;
 
     @GetMapping("")
     public String index(@RequestParam String key) {
@@ -58,6 +63,8 @@ public class RateLimiterV2Controller {
         builder.append(this.agentLimiter.htmlStat(key));
         builder.append("<br/>");
         builder.append(this.apiLimiter.htmlStat());
+        builder.append("<br/>");
+        builder.append(this.atomicLongLimiter.htmlStat());
         builder.append("<br/>");
         return builder.toString();
     }
