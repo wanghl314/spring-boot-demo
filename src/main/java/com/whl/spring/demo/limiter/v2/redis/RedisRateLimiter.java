@@ -1,22 +1,26 @@
-package com.whl.spring.demo.limiter.redis;
+package com.whl.spring.demo.limiter.v2.redis;
 
-import com.whl.spring.demo.limiter.AbstractTimeBasedRateLimiter;
-import com.whl.spring.demo.limiter.RateWindow;
-import lombok.Getter;
+import com.whl.spring.demo.limiter.v2.AbstractRateLimiter;
+import com.whl.spring.demo.limiter.v2.RateWindow;
+import com.whl.spring.demo.limiter.v2.TimeBoundRateValue;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Getter
-public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
+public class RedisRateLimiter extends AbstractRateLimiter {
     private final RedisTemplate<String, List<Long>> redisTemplate;
 
+    public RedisRateLimiter(String name, int intervalInMs, long limit, RedisTemplate<?, ?> redisTemplate) {
+        this(name, intervalInMs, DEFAULT_WINDOW_LENGTH_IN_MS, limit, redisTemplate);
+    }
+
     @SuppressWarnings("unchecked")
-    public RedisTimeBasedRateLimiter(String name, int intervalInMs, long limit, RedisTemplate<?, ?> redisTemplate) {
-        super(name, intervalInMs, limit);
+    public RedisRateLimiter(String name, int intervalInMs, int windowLengthInMs, long limit, RedisTemplate<?, ?> redisTemplate) {
+        super(name, intervalInMs, windowLengthInMs, limit);
         this.redisTemplate = (RedisTemplate<String, List<Long>>) redisTemplate;
     }
 
@@ -29,7 +33,7 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
                 Long time = data.get(i);
 
                 if (time != null) {
-                    RateWindow<RedisTimeBasedRateValue> window = new RateWindow<RedisTimeBasedRateValue>(time, new RedisTimeBasedRateValue(redisTemplate, this.name + ":" + time));
+                    RateWindow<?> window = this.newWindow(time);
                     this.array.compareAndSet(i, null, window);
                 }
             }
@@ -45,18 +49,18 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
             RateWindow<?> window = this.array.get(i);
 
             if (window != null) {
-                data.add(window.time());
+                data.add(window.getTime());
             } else {
                 data.add(null);
             }
         }
         this.redisTemplate.opsForValue().set(key, data);
-        this.redisTemplate.expire(key, RedisTimeBasedRateValue.DEFAULT_EXPIRE.getSeconds() * 2, TimeUnit.SECONDS);
+        this.redisTemplate.expire(key, TimeBoundRateValue.DEFAULT_EXPIRE.getSeconds() * 2, TimeUnit.SECONDS);
     }
 
     @Override
-    protected RateWindow<RedisTimeBasedRateValue> newWindow(long time) {
-        return new RateWindow<>(time, new RedisTimeBasedRateValue(this.redisTemplate, this.name + ":" + time));
+    protected RateWindow<?> newWindow(long time) {
+        return new RateWindow<>(time, new RedisRateValue(this.redisTemplate), this.name);
     }
 
     @Override
@@ -66,17 +70,11 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
         }
     }
 
-    @Override
-    public String toString() {
-        return name +
-                "{" +
-                "intervalInMs=" + intervalInMs +
-                ", limit=" + limit +
-                ", passed=" + this.passed() +
-                '}';
+    public String htmlStat() {
+        return this.htmlStat(null);
     }
 
-    public String htmlStat() {
+    public String htmlStat(String key) {
         StringBuilder builder = new StringBuilder();
         builder.append("<table border=\"1\" style=\"border-collapse:collapse;\">");
         builder.append("  <thead>");
@@ -87,21 +85,26 @@ public class RedisTimeBasedRateLimiter extends AbstractTimeBasedRateLimiter {
         builder.append("    </tr>");
         builder.append("  </thead>");
         builder.append("  <tbody>");
-        List<RateWindow<?>> statistics = this.statistics();
+        List<RateWindow<?>> statistics = this.statistics(key);
         long totalPassed = 0;
 
         for (RateWindow<?> window : statistics) {
             if (window != null) {
-                long time = window.time();
+                long time = window.getTime();
                 long passed = window.get();
                 totalPassed += passed;
                 builder.append("    <tr>");
                 builder.append("      <td style=\"padding:5px;\">");
 
+                if (StringUtils.isNotBlank(key)) {
+                    builder.append(key);
+                    builder.append(":");
+                }
+
                 if (time % 1000 == 0) {
-                    builder.append(window.time() / 1000);
+                    builder.append(time / 1000);
                 } else {
-                    builder.append(window.time());
+                    builder.append(time);
                 }
                 builder.append("</td>");
                 builder.append("      <td style=\"padding:5px;\">");

@@ -1,10 +1,10 @@
 package com.whl.spring.demo.controller;
 
-import com.whl.spring.demo.limiter.KeyBasedRateLimiter;
-import com.whl.spring.demo.limiter.RateWindow;
-import com.whl.spring.demo.limiter.TimeBasedRateLimiter;
-import com.whl.spring.demo.limiter.redis.RedisKeyTimeBasedRateLimiter;
-import com.whl.spring.demo.limiter.redis.RedisTimeBasedRateLimiter;
+import com.whl.spring.demo.limiter.v1.KeyBasedRateLimiter;
+import com.whl.spring.demo.limiter.v1.RateWindow;
+import com.whl.spring.demo.limiter.v1.TimeBasedRateLimiter;
+import com.whl.spring.demo.limiter.v1.redis.RedisKeyTimeBasedRateLimiter;
+import com.whl.spring.demo.limiter.v1.redis.RedisTimeBasedRateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rateLimiter")
-public class RateLimiterController {
+@RequestMapping("/rateLimiter/v1")
+public class RateLimiterV1Controller {
     @Autowired
     private List<KeyBasedRateLimiter> keyLimiters;
 

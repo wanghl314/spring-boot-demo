@@ -1,7 +1,7 @@
-package com.whl.spring.demo.limiter.redis;
+package com.whl.spring.demo.limiter.v1.redis;
 
-import com.whl.spring.demo.limiter.DefaultRateLimiter;
-import com.whl.spring.demo.limiter.KeyBasedRateValue;
+import com.whl.spring.demo.limiter.v1.DefaultRateLimiter;
+import com.whl.spring.demo.limiter.v1.KeyBasedRateValue;
 import lombok.Getter;
 import org.springframework.util.Assert;
 

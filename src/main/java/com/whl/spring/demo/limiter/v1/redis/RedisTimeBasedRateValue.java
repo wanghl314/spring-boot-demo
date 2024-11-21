@@ -1,6 +1,6 @@
-package com.whl.spring.demo.limiter.redis;
+package com.whl.spring.demo.limiter.v1.redis;
 
-import com.whl.spring.demo.limiter.TimeBasedRateValue;
+import com.whl.spring.demo.limiter.v1.TimeBasedRateValue;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;

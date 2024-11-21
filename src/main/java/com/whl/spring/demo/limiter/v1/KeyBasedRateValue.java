@@ -1,4 +1,4 @@
-package com.whl.spring.demo.limiter;
+package com.whl.spring.demo.limiter.v1;
 
 public interface KeyBasedRateValue extends RateValue {
     long get(String key);
