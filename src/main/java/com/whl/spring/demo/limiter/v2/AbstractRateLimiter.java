@@ -206,6 +206,7 @@ public abstract class AbstractRateLimiter implements RateLimiter {
     }
 
     public void init() {
+        this.inited = true;
     }
 
     public void persist() {
