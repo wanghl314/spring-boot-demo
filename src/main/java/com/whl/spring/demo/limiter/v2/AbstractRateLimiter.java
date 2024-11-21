@@ -8,12 +8,15 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Getter
 public abstract class AbstractRateLimiter implements RateLimiter {
     protected static final int DEFAULT_WINDOW_LENGTH_IN_MS = 1000;
 
     private static final int MINIMUM_WINDOW_LENGTH_IN_MS = 500;
+
+    private final ReentrantLock changeLock = new ReentrantLock();
 
     protected String name;
 
@@ -56,36 +59,44 @@ public abstract class AbstractRateLimiter implements RateLimiter {
         this.change(intervalInMs, this.windowLengthInMs, limit);
     }
 
-    public synchronized void change(int intervalInMs, int windowLengthInMs, long limit) {
+    public void change(int intervalInMs, int windowLengthInMs, long limit) {
         Assert.isTrue(intervalInMs > 0, "intervalInMs should be positive");
         Assert.isTrue(windowLengthInMs >= MINIMUM_WINDOW_LENGTH_IN_MS, "the minimum value of windowLengthInMs is " + MINIMUM_WINDOW_LENGTH_IN_MS);
         Assert.isTrue(intervalInMs >= windowLengthInMs, "intervalInMs should be no less then windowLengthInMs");
         Assert.isTrue(intervalInMs % windowLengthInMs == 0, "intervalInMs must be divided by windowLengthInMs");
         Assert.isTrue(limit > 0, "limit should be positive");
-        this.intervalInMs = intervalInMs;
-        this.windowLengthInMs = windowLengthInMs;
-        this.limit = limit;
-        this.sampleCount = this.intervalInMs / this.windowLengthInMs;
 
-        if (this.sampleCount > 1) {
-            if (this.array == null) {
-                this.array = new AtomicReferenceArray<>(this.sampleCount);
-            } else {
-                long current = System.currentTimeMillis();
-                AtomicReferenceArray<RateWindow<?>> temp = new AtomicReferenceArray<>(this.sampleCount);
+        if (this.changeLock.tryLock()) {
+            try {
+                this.intervalInMs = intervalInMs;
+                this.windowLengthInMs = windowLengthInMs;
+                this.limit = limit;
+                this.sampleCount = this.intervalInMs / this.windowLengthInMs;
 
-                for (int i = 0; i < this.array.length(); i++) {
-                    RateWindow<?> window = this.array.get(i);
-                    int newIdx = this.calculateTimeIdx(window.getTime());
-                    long newTime = this.calculateTime(window.getTime());
-                    RateWindow<?> exists = temp.get(newIdx);
+                if (this.sampleCount == 1) {
+                    this.array = null;
+                } else {
+                    if (this.array == null) {
+                        this.array = new AtomicReferenceArray<>(this.sampleCount);
+                    } else {
+                        AtomicReferenceArray<RateWindow<?>> temp = new AtomicReferenceArray<>(this.sampleCount);
 
-                    if (exists == null || exists.getTime() < newTime) {
-                        temp.compareAndSet(newIdx, exists, this.newWindow(newTime));
+                        for (int i = 0; i < this.array.length(); i++) {
+                            RateWindow<?> window = this.array.get(i);
+                            int newIdx = this.calculateTimeIdx(window.getTime());
+                            long newTime = this.calculateTime(window.getTime());
+                            RateWindow<?> exists = temp.get(newIdx);
+
+                            if (exists == null || exists.getTime() < newTime) {
+                                temp.compareAndSet(newIdx, exists, this.newWindow(newTime));
+                            }
+                        }
+                        this.array = temp;
                     }
+                    this.sliding(System.currentTimeMillis());
                 }
-                this.array = temp;
-                this.sliding(current);
+            } finally {
+                this.changeLock.unlock();
             }
         }
     }
@@ -143,21 +154,27 @@ public abstract class AbstractRateLimiter implements RateLimiter {
         return window.copy(this.key(key));
     }
 
-    public synchronized void sliding(long currentTime) {
+    public void sliding(long currentTime) {
         if (this.array != null) {
-            int idx = this.calculateTimeIdx(currentTime);
-            long time = this.calculateTime(currentTime);
-            RateWindow<?> old = this.array.get(idx);
+            if (this.changeLock.tryLock()) {
+                try {
+                    int idx = this.calculateTimeIdx(currentTime);
+                    long time = this.calculateTime(currentTime);
+                    RateWindow<?> old = this.array.get(idx);
 
-            if (old == null || old.getTime() != time) {
-                RateWindow<?> window = this.newWindow(time);
-                this.array.compareAndSet(idx, old, window);
+                    if (old == null || old.getTime() != time) {
+                        RateWindow<?> window = this.newWindow(time);
+                        this.array.compareAndSet(idx, old, window);
 
-                if (old != null) {
-                    this.deprecated(old);
+                        if (old != null) {
+                            this.deprecated(old);
+                        }
+                    }
+                    this.persist();
+                } finally {
+                    this.changeLock.unlock();
                 }
             }
-            this.persist();
         }
     }
 

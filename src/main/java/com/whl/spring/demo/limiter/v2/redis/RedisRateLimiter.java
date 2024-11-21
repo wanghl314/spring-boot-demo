@@ -4,7 +4,6 @@ import com.whl.spring.demo.limiter.v2.AbstractRateLimiter;
 import com.whl.spring.demo.limiter.v2.RateWindow;
 import com.whl.spring.demo.limiter.v2.TimeBoundRateValue;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
@@ -90,22 +89,11 @@ public class RedisRateLimiter extends AbstractRateLimiter {
 
         for (RateWindow<?> window : statistics) {
             if (window != null) {
-                long time = window.getTime();
                 long passed = window.get();
                 totalPassed += passed;
                 builder.append("    <tr>");
                 builder.append("      <td style=\"padding:5px;\">");
-
-                if (StringUtils.isNotBlank(key)) {
-                    builder.append(key);
-                    builder.append(":");
-                }
-
-                if (time % 1000 == 0) {
-                    builder.append(time / 1000);
-                } else {
-                    builder.append(time);
-                }
+                builder.append(window.getValue().getKey());
                 builder.append("</td>");
                 builder.append("      <td style=\"padding:5px;\">");
                 builder.append(passed);

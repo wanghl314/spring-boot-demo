@@ -9,10 +9,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class AtomicLongRateValue implements RateValue {
     private AtomicLong value;
 
-    @Override
-    public void setKey(String key) {
-    }
-
     public long get() {
         return this.value.get();
     }

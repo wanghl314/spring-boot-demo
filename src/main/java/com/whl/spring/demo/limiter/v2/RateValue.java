@@ -1,7 +1,12 @@
 package com.whl.spring.demo.limiter.v2;
 
 public interface RateValue {
-    void setKey(String key);
+    default String getKey() {
+        return null;
+    }
+
+    default void setKey(String key) {
+    }
 
     long get();
 
