@@ -49,8 +49,8 @@ public class RedisRateLimiter extends AbstractRateLimiter {
                 if (expire != null && expire > 0L) {
                     this.expire = Duration.ofSeconds(expire);
                 }
-                if (intervalInMs != null && intervalInMs > 0 &&
-                        limit != null && limit > 0L) {
+                if (intervalInMs != null && intervalInMs > 0 && limit != null && limit > 0L &&
+                        (intervalInMs != this.intervalInMs && limit != this.limit)) {
                     this.change(intervalInMs, limit);
                 }
                 if (CollectionUtils.isNotEmpty(times)) {
