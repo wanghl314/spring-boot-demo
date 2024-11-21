@@ -3,15 +3,27 @@ package com.whl.spring.demo.limiter.v2.redis;
 import com.whl.spring.demo.limiter.v2.AbstractRateLimiter;
 import com.whl.spring.demo.limiter.v2.RateWindow;
 import com.whl.spring.demo.limiter.v2.TimeBoundRateValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class RedisRateLimiter extends AbstractRateLimiter {
-    private final RedisTemplate<String, List<Long>> redisTemplate;
+    private static final String KEY_SUFFIX = ":persist";
+
+    private final RedisTemplate<String, Persist> redisTemplate;
+
+    @Getter
+    @Setter
+    private Duration expire;
 
     public RedisRateLimiter(String name, int intervalInMs, long limit, RedisTemplate<?, ?> redisTemplate) {
         this(name, intervalInMs, DEFAULT_WINDOW_LENGTH_IN_MS, limit, redisTemplate);
@@ -20,46 +32,63 @@ public class RedisRateLimiter extends AbstractRateLimiter {
     @SuppressWarnings("unchecked")
     public RedisRateLimiter(String name, int intervalInMs, int windowLengthInMs, long limit, RedisTemplate<?, ?> redisTemplate) {
         super(name, intervalInMs, windowLengthInMs, limit);
-        this.redisTemplate = (RedisTemplate<String, List<Long>>) redisTemplate;
+        this.redisTemplate = (RedisTemplate<String, Persist>) redisTemplate;
     }
 
     @Override
     public void init() {
-        List<Long> data = this.redisTemplate.opsForValue().get(this.name + ":persist");
+        if (!this.inited) {
+            Persist persist = this.redisTemplate.opsForValue().get(this.name + KEY_SUFFIX);
 
-        if (CollectionUtils.isNotEmpty(data) && data.size() == this.sampleCount) {
-            for (int i = 0; i < this.sampleCount; i++) {
-                Long time = data.get(i);
+            if (persist != null) {
+                Long expire = persist.getExpire();
+                Integer intervalInMs = persist.getIntervalInMs();
+                Long limit = persist.getLimit();
+                List<Long> times = persist.getTimes();
 
-                if (time != null) {
-                    RateWindow<?> window = this.newWindow(time);
-                    this.array.compareAndSet(i, null, window);
+                if (expire != null && expire > 0L) {
+                    this.expire = Duration.ofSeconds(expire);
+                }
+                if (intervalInMs != null && intervalInMs > 0 &&
+                        limit != null && limit > 0L) {
+                    this.change(intervalInMs, limit);
+                }
+                if (CollectionUtils.isNotEmpty(times)) {
+                    times.forEach(time -> {
+                        if (time != null) {
+                            this.sliding(time);
+                        }
+                    });
                 }
             }
+            this.inited = true;
         }
     }
 
     @Override
     public void persist() {
         String key = this.name + ":persist";
-        List<Long> data = new ArrayList<>();
+        List<Long> times = new ArrayList<>();
 
         for (int i = 0; i < this.array.length(); i++) {
             RateWindow<?> window = this.array.get(i);
 
             if (window != null) {
-                data.add(window.getTime());
+                times.add(window.getTime());
             } else {
-                data.add(null);
+                times.add(null);
             }
         }
-        this.redisTemplate.opsForValue().set(key, data);
-        this.redisTemplate.expire(key, TimeBoundRateValue.DEFAULT_EXPIRE.getSeconds() * 2, TimeUnit.SECONDS);
+        Persist persist = new Persist(this.expire != null ? this.expire.getSeconds() : null, this.intervalInMs, this.limit, times);
+        this.redisTemplate.opsForValue().set(key, persist);
+        this.redisTemplate.expire(key, this.getExpireTime());
     }
 
     @Override
     protected RateWindow<?> newWindow(long time) {
-        return new RateWindow<>(time, new RedisRateValue(this.redisTemplate), this.name);
+        RedisRateValue value = new RedisRateValue(this.redisTemplate);
+        value.setExpire(this.expire);
+        return new RateWindow<>(time, value, this.name);
     }
 
     @Override
@@ -112,6 +141,31 @@ public class RedisRateLimiter extends AbstractRateLimiter {
         builder.append("  </tfoot>");
         builder.append("</table>");
         return builder.toString();
+    }
+
+    private Duration getExpireTime() {
+        if (this.expire != null && this.expire != Duration.ZERO) {
+            return this.expire;
+        }
+        return Duration.ofSeconds(TimeBoundRateValue.DEFAULT_EXPIRE.getSeconds() * 2);
+    }
+
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Persist implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 4033100182607933453L;
+
+        private Long expire;
+
+        private Integer intervalInMs;
+
+        private Long limit;
+
+        private List<Long> times;
     }
 
 }

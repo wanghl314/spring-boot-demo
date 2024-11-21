@@ -5,6 +5,7 @@ import com.whl.spring.demo.limiter.v1.TimeBasedRateLimiter;
 import com.whl.spring.demo.limiter.v1.redis.RedisKeyTimeBasedRateLimiter;
 import com.whl.spring.demo.limiter.v1.redis.RedisKeyTimeBasedRateValue;
 import com.whl.spring.demo.limiter.v1.redis.RedisTimeBasedRateLimiter;
+import com.whl.spring.demo.limiter.v2.AbstractRateLimiter;
 import com.whl.spring.demo.limiter.v2.redis.RedisRateLimiter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.ObjectProvider;
@@ -28,77 +29,56 @@ public class RateLimiterConfig {
 
     @Bean
     public TimeBasedRateLimiter dingTalkApiV1() {
-        RedisTimeBasedRateLimiter limiter = new RedisTimeBasedRateLimiter("DingTalk-Api-V1", 20000, 10000, this.redisTemplate);
-        limiter.init();
-        return limiter;
+        return new RedisTimeBasedRateLimiter("DingTalk-Api-V1", 20000, 10000, this.redisTemplate);
     }
 
     @Bean
     public RedisRateLimiter dingTalkAgentV2() {
-        RedisRateLimiter limiter = new RedisRateLimiter("DingTalk-Agent-V2", 1000, 20, this.redisTemplate);
-        limiter.init();
-        return limiter;
+        return new RedisRateLimiter("DingTalk-Agent-V2", 1000, 20, this.redisTemplate);
     }
 
     @Bean
     public RedisRateLimiter dingTalkApiV2() {
-        RedisRateLimiter limiter = new RedisRateLimiter("DingTalk-Api-V2", 20000, 10000, this.redisTemplate);
-        limiter.init();
-        return limiter;
+        return new RedisRateLimiter("DingTalk-Api-V2", 20000, 10000, this.redisTemplate);
     }
 
     @Bean
     public com.whl.spring.demo.limiter.v1.atomic.AtomicLongRateLimiter atomicLongTestV1() {
-        com.whl.spring.demo.limiter.v1.atomic.AtomicLongRateLimiter limiter = new com.whl.spring.demo.limiter.v1.atomic.AtomicLongRateLimiter("AtomicLong-Test-V1", 10000, 200);
-        limiter.init();
-        return limiter;
+        return new com.whl.spring.demo.limiter.v1.atomic.AtomicLongRateLimiter("AtomicLong-Test-V1", 10000, 200);
     }
 
     @Bean
     public com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter atomicLongTestV2() {
-        com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter limiter = new com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter("AtomicLong-Test-V2", 10000, 200);
-        limiter.init();
-        return limiter;
+        return new com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter("AtomicLong-Test-V2", 10000, 200);
     }
 
     @Configuration
     static class TimeBasedRateLimiterSlidingConfig {
-        private final List<TimeBasedRateLimiter> timeLimiters;
+        private final List<TimeBasedRateLimiter> v1TimeLimiters;
 
-        private final List<RedisRateLimiter> redisLimiters;
+        private final List<AbstractRateLimiter> v2Limiters;
 
-        private final List<com.whl.spring.demo.limiter.v1.atomic.AtomicLongRateLimiter> atomicLongLimitersV1;
+        TimeBasedRateLimiterSlidingConfig(ObjectProvider<List<TimeBasedRateLimiter>> v1Provider,
+                                          ObjectProvider<List<AbstractRateLimiter>> v2Provider) {
+            this.v1TimeLimiters = v1Provider.getIfAvailable();
+            this.v2Limiters = v2Provider.getIfAvailable();
 
-        private final List<com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter> atomicLongLimitersV2;
-
-        TimeBasedRateLimiterSlidingConfig(ObjectProvider<List<TimeBasedRateLimiter>> timeProvider,
-                                          ObjectProvider<List<RedisRateLimiter>> redisProvider,
-                                          ObjectProvider<List<com.whl.spring.demo.limiter.v1.atomic.AtomicLongRateLimiter>> atomicV1Provider,
-                                          ObjectProvider<List<com.whl.spring.demo.limiter.v2.atomic.AtomicLongRateLimiter>> atomicV2Provider) {
-            this.timeLimiters = timeProvider.getIfAvailable();
-            this.redisLimiters = redisProvider.getIfAvailable();
-            this.atomicLongLimitersV1 = atomicV1Provider.getIfAvailable();
-            this.atomicLongLimitersV2 = atomicV2Provider.getIfAvailable();
+            if (CollectionUtils.isNotEmpty(this.v1TimeLimiters)) {
+                this.v1TimeLimiters.forEach(TimeBasedRateLimiter::init);
+            }
+            if (CollectionUtils.isNotEmpty(this.v2Limiters)) {
+                this.v2Limiters.forEach(AbstractRateLimiter::init);
+            }
         }
 
         @Scheduled(cron = "0/1 * * * * ?")
         public void sliding() {
-            if (CollectionUtils.isNotEmpty(this.timeLimiters)) {
-                this.timeLimiters.forEach(limiter -> limiter.sliding(System.currentTimeMillis()));
+            if (CollectionUtils.isNotEmpty(this.v1TimeLimiters)) {
+                this.v1TimeLimiters.forEach(limiter -> limiter.sliding(System.currentTimeMillis()));
             }
-            if (CollectionUtils.isNotEmpty(this.atomicLongLimitersV1)) {
-                this.atomicLongLimitersV1.forEach(limiter -> limiter.sliding(System.currentTimeMillis()));
-            }
-            if (CollectionUtils.isNotEmpty(this.redisLimiters)) {
-                this.redisLimiters.forEach(limiter -> {
-                    if (limiter.isEnabled()) {
-                        limiter.sliding(System.currentTimeMillis());
-                    }
-                });
-            }
-            if (CollectionUtils.isNotEmpty(this.atomicLongLimitersV2)) {
-                this.atomicLongLimitersV2.forEach(limiter -> {
-                    if (limiter.isEnabled()) {
+            if (CollectionUtils.isNotEmpty(this.v2Limiters)) {
+                this.v2Limiters.forEach(limiter -> {
+                    if (limiter.isInited() && limiter.isEnabled()) {
                         limiter.sliding(System.currentTimeMillis());
                     }
                 });

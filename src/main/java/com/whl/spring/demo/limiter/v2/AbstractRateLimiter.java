@@ -23,6 +23,8 @@ public abstract class AbstractRateLimiter implements RateLimiter {
     @Setter
     protected boolean enabled = true;
 
+    protected volatile boolean inited = false;
+
     protected int intervalInMs;
 
     protected int sampleCount;
@@ -83,12 +85,15 @@ public abstract class AbstractRateLimiter implements RateLimiter {
 
                         for (int i = 0; i < this.array.length(); i++) {
                             RateWindow<?> window = this.array.get(i);
-                            int newIdx = this.calculateTimeIdx(window.getTime());
-                            long newTime = this.calculateTime(window.getTime());
-                            RateWindow<?> exists = temp.get(newIdx);
 
-                            if (exists == null || exists.getTime() < newTime) {
-                                temp.compareAndSet(newIdx, exists, this.newWindow(newTime));
+                            if (window != null) {
+                                int newIdx = this.calculateTimeIdx(window.getTime());
+                                long newTime = this.calculateTime(window.getTime());
+                                RateWindow<?> exists = temp.get(newIdx);
+
+                                if (exists == null || exists.getTime() < newTime) {
+                                    temp.compareAndSet(newIdx, exists, this.newWindow(newTime));
+                                }
                             }
                         }
                         this.array = temp;
