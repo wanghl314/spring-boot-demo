@@ -30,7 +30,7 @@ public class AtomicLongRateLimiter extends AbstractRateLimiter {
 
     public String htmlStat() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<table border=\"1\" style=\"border-collapse:collapse;\">");
+        builder.append("<table border=\"1\" style=\"border-collapse:collapse;text-align:center;\">");
         builder.append("  <thead>");
         builder.append("    <tr>");
         builder.append("      <th colspan=\"2\" style=\"padding:5px;\">");
@@ -59,14 +59,15 @@ public class AtomicLongRateLimiter extends AbstractRateLimiter {
         builder.append("  </tbody>");
         builder.append("  <tfoot>");
         builder.append("    <tr>");
-        builder.append("      <th style=\"padding:5px;\">limit</th>");
-        builder.append(this.limit);
-        builder.append("</th>");
-        builder.append("    </tr>");
-        builder.append("    <tr>");
         builder.append("      <th style=\"padding:5px;\">totalPassed</th>");
         builder.append("      <th style=\"padding:5px;\">");
         builder.append(totalPassed);
+        builder.append("</th>");
+        builder.append("    </tr>");
+        builder.append("    <tr>");
+        builder.append("      <th style=\"padding:5px;\">limit</th>");
+        builder.append("      <th style=\"padding:5px;\">");
+        builder.append(this.limit);
         builder.append("</th>");
         builder.append("    </tr>");
         builder.append("  </tfoot>");
