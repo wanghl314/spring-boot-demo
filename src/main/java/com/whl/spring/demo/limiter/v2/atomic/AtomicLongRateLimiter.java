@@ -59,6 +59,11 @@ public class AtomicLongRateLimiter extends AbstractRateLimiter {
         builder.append("  </tbody>");
         builder.append("  <tfoot>");
         builder.append("    <tr>");
+        builder.append("      <th style=\"padding:5px;\">limit</th>");
+        builder.append(this.limit);
+        builder.append("</th>");
+        builder.append("    </tr>");
+        builder.append("    <tr>");
         builder.append("      <th style=\"padding:5px;\">totalPassed</th>");
         builder.append("      <th style=\"padding:5px;\">");
         builder.append(totalPassed);
