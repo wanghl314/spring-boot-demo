@@ -31,32 +31,39 @@ public class RedisKeyTimeBasedRateLimiter extends DefaultRateLimiter {
     }
 
     public String htmlStat(String key) {
-        String displayKey = key + ":" + this.index();
+        long current = System.currentTimeMillis();
+        String displayKey = this.name + ":" + key + ":" + (current - current % this.intervalInMs);
         long passed = this.passed(key);
         StringBuilder builder = new StringBuilder();
-        builder.append("<table border=\"1\" style=\"border-collapse:collapse;\">");
+        builder.append("<table border=\"0\" cellspacing=\"1\" cellpadding=\"5\" style=\"background-color:#000;text-align:center;\">");
         builder.append("  <thead>");
         builder.append("    <tr>");
-        builder.append("      <th colspan=\"2\" style=\"padding:5px;\">");
+        builder.append("      <th colspan=\"2\" style=\"background-color:#fff;\">");
         builder.append(this.getName());
         builder.append("</th>");
         builder.append("    </tr>");
         builder.append("  </thead>");
         builder.append("  <tbody>");
         builder.append("    <tr>");
-        builder.append("      <td style=\"padding:5px;\">");
+        builder.append("      <td style=\"background-color:#fff;\">");
         builder.append(displayKey);
         builder.append("</td>");
-        builder.append("      <td style=\"padding:5px;\">");
+        builder.append("      <td style=\"background-color:#fff;\">");
         builder.append(passed);
         builder.append("</td>");
         builder.append("    </tr>");
         builder.append("  </tbody>");
         builder.append("  <tfoot>");
         builder.append("    <tr>");
-        builder.append("      <th style=\"padding:5px;\">totalPassed</th>");
-        builder.append("      <th style=\"padding:5px;\">");
+        builder.append("      <th style=\"background-color:#fff;\">totalPassed</th>");
+        builder.append("      <th style=\"background-color:#fff;\">");
         builder.append(passed);
+        builder.append("</th>");
+        builder.append("    </tr>");
+        builder.append("    <tr>");
+        builder.append("      <th style=\"background-color:#fff;\">limit</th>");
+        builder.append("      <th style=\"background-color:#fff;\">");
+        builder.append(this.limit);
         builder.append("</th>");
         builder.append("    </tr>");
         builder.append("  </tfoot>");

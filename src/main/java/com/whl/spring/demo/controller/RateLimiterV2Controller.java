@@ -61,11 +61,8 @@ public class RateLimiterV2Controller {
     public String stat(@RequestParam String key) {
         StringBuilder builder = new StringBuilder();
         builder.append(this.agentLimiter.htmlStat(key));
-        builder.append("<br/>");
         builder.append(this.apiLimiter.htmlStat());
-        builder.append("<br/>");
         builder.append(this.atomicLongLimiter.htmlStat());
-        builder.append("<br/>");
         return builder.toString();
     }
 
