@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
-	<property name="LOG_FILE" value="${LOG_FILE:-${demo.home:-${user.dir}}/logs/spring-boot-demo.log}"/>
+	<property name="LOG_FILE" value="${LOG_FILE:-${demo.home:-${user.dir}}/logs/spring-boot-demo.log}" />
 	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<encoder>
@@ -18,6 +18,6 @@
 	<root level="INFO">
 		<appender-ref ref="FILE" />
 	</root>
-	<logger name="com.whl.spring.demo" level="DEBUG" />
-	<logger name="org.springframework.data.mongodb.core.MongoTemplate" level="DEBUG" />
+	<logger name="com.whl.spring.demo" level="INFO" />
+	<logger name="org.springframework.data.mongodb.core.MongoTemplate" level="INFO" />
 </configuration>
