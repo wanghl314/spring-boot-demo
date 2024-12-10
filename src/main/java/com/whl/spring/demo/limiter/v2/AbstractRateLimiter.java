@@ -69,6 +69,8 @@ public abstract class AbstractRateLimiter implements RateLimiter {
         Assert.isTrue(limit > 0, "limit should be positive");
 
         if (this.changeLock.tryLock()) {
+            inited = false;
+
             try {
                 this.intervalInMs = intervalInMs;
                 this.windowLengthInMs = windowLengthInMs;
@@ -101,6 +103,7 @@ public abstract class AbstractRateLimiter implements RateLimiter {
                     this.sliding(System.currentTimeMillis());
                 }
             } finally {
+                inited = true;
                 this.changeLock.unlock();
             }
         }
@@ -161,25 +164,19 @@ public abstract class AbstractRateLimiter implements RateLimiter {
 
     public void sliding(long currentTime) {
         if (this.array != null) {
-            if (this.changeLock.tryLock()) {
-                try {
-                    int idx = this.calculateTimeIdx(currentTime);
-                    long time = this.calculateTime(currentTime);
-                    RateWindow<?> old = this.array.get(idx);
+            int idx = this.calculateTimeIdx(currentTime);
+            long time = this.calculateTime(currentTime);
+            RateWindow<?> old = this.array.get(idx);
 
-                    if (old == null || old.getTime() != time) {
-                        RateWindow<?> window = this.newWindow(time);
-                        this.array.compareAndSet(idx, old, window);
+            if (old == null || old.getTime() != time) {
+                RateWindow<?> window = this.newWindow(time);
+                this.array.compareAndSet(idx, old, window);
 
-                        if (old != null) {
-                            this.deprecated(old);
-                        }
-                    }
-                    this.persist();
-                } finally {
-                    this.changeLock.unlock();
+                if (old != null) {
+                    this.deprecated(old);
                 }
             }
+            this.persist();
         }
     }
 
