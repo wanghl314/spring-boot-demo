@@ -80,8 +80,7 @@ public class RedisRateLimiter extends AbstractRateLimiter {
             }
         }
         Persist persist = new Persist(this.expire != null ? this.expire.getSeconds() : null, this.intervalInMs, this.limit, times);
-        this.redisTemplate.opsForValue().set(key, persist);
-        this.redisTemplate.expire(key, this.getExpireTime());
+        this.redisTemplate.opsForValue().set(key, persist, this.getExpireTime());
     }
 
     @Override
