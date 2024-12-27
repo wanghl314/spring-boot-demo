@@ -1,4 +1,4 @@
-package com.whl.spring.demo.limiter.v2;
+package com.whl.spring.demo.limiter;
 
 import lombok.Getter;
 

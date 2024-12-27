@@ -1,4 +1,4 @@
-package com.whl.spring.demo.limiter.v2;
+package com.whl.spring.demo.limiter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +69,7 @@ public abstract class AbstractRateLimiter implements RateLimiter {
         Assert.isTrue(limit > 0, "limit should be positive");
 
         if (this.changeLock.tryLock()) {
-            inited = false;
+            this.inited = false;
 
             try {
                 this.intervalInMs = intervalInMs;
@@ -103,24 +103,28 @@ public abstract class AbstractRateLimiter implements RateLimiter {
                     this.sliding(System.currentTimeMillis());
                 }
             } finally {
-                inited = true;
+                this.inited = true;
                 this.changeLock.unlock();
             }
         }
     }
 
+    @Override
     public boolean isLimit() {
         return this.isLimit(null);
     }
 
+    @Override
     public boolean isLimit(String key) {
         return this.passed(key) >= this.limit;
     }
 
+    @Override
     public long passed() {
         return this.passed(null);
     }
 
+    @Override
     public long passed(String key) {
         long passed = 0;
 
@@ -140,10 +144,12 @@ public abstract class AbstractRateLimiter implements RateLimiter {
         return passed;
     }
 
+    @Override
     public RateWindow<?> currentWindow(long currentTime) {
         return this.currentWindow(currentTime, null);
     }
 
+    @Override
     public RateWindow<?> currentWindow(long currentTime, String key) {
         long time = this.calculateTime(currentTime);
         RateWindow<?> window;
@@ -209,10 +215,13 @@ public abstract class AbstractRateLimiter implements RateLimiter {
     public void persist() {
     }
 
+    @Override
     public String toString() {
-        return "AbstractRateLimiter{" +
+        return this.getClass().getSimpleName() +
+                "{" +
                 "name='" + name + '\'' +
                 ", enabled=" + enabled +
+                ", inited=" + inited +
                 ", intervalInMs=" + intervalInMs +
                 ", sampleCount=" + sampleCount +
                 ", limit=" + limit +

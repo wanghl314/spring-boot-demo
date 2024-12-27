@@ -1,4 +1,4 @@
-package com.whl.spring.demo.limiter.v2;
+package com.whl.spring.demo.limiter;
 
 public interface RateLimiter {
     String getName();
@@ -14,6 +14,10 @@ public interface RateLimiter {
     long getLimit();
 
     int getWindowLengthInMs();
+
+    RateWindow<?> currentWindow(long currentTime);
+
+    RateWindow<?> currentWindow(long currentTime, String key);
 
     boolean isLimit();
 

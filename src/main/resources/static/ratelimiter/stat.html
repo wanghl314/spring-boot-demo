@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>限流监控</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <style type="text/css">
+      #stat-info table {
+        vertical-align: top;
+      }
+      #stat-info table {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="select-area">
+      <div>
+        <label>限流器: </label>
+        <select id="ratelimiter">
+          <option value="">请选择</option>
+        </select>
+      </div>
+      <form id="query-form" style="display: none;">
+        <input type="hidden" name="name" value="" />
+        <label>key: <input type="text" name="key" value="" /></label>
+        <button type="button" id="query" value="">监控</button>
+      </form>
+    </div>
+    <div id="stat-info"></div>
+    <script src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(function(){
+        let interval;
+
+        $.ajax({
+          url: "/ratelimiter/list?_t=" + (new Date().getTime()),
+          type: "GET",
+          dataType: "json",
+          beforeSend: function(XMLHttpRequest) {
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+          },
+          success: function(data) {
+            $("#ratelimiter").html("<option value=\"\">请选择</option>");
+
+            if (data.code === 0) {
+              const ratelimiters = data.data;
+
+              for (var i = 0; i < ratelimiters.length; i++) {
+                const limiter = ratelimiters[i];
+                $("#ratelimiter").append("<option value=\"" + limiter + "\">" + limiter + "</option>");
+              }
+            }
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+          }
+        });
+
+        $(document).on("change", "#ratelimiter", function() {
+          reset();
+          const limiter = $(this).val();
+          const match = /name='(.*?)'/g.exec(limiter);
+
+          if (match) {
+            $("#query-form").find("input[name='name']").val(match[1]);
+            $("#query-form").show();
+          }
+        });
+
+        $(document).on("click", "#query", function() {
+          reset();
+          const name = $("#query-form").find("input[name='name']").val();
+          const key = $("#query-form").find("input[name='key']").val();
+
+          if (name === "") {
+            alert("name is required");
+          } else {
+            interval = setInterval((function loadMetricData(){
+              $.ajax({
+                url: "/ratelimiter/stat/" + name + "?key=" + key + "&_t=" + (new Date().getTime()),
+                type: "GET",
+                dataType: "json",
+                beforeSend: function (XMLHttpRequest) {
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                success: function (data) {
+                  if (data.code === 0) {
+                    $("#stat-info").html(data.data);
+                  } else {
+                    $("#stat-info").html(data.msg);
+                    clearInterval(interval);
+                  }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+              });
+              return loadMetricData;
+            })(), 200);
+          }
+        });
+
+        function reset() {
+          $("#stat-info").html("");
+          clearInterval(interval);
+        }
+      });
+    </script>
+  </body>
+</html>

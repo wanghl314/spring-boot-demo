@@ -1,8 +1,8 @@
-package com.whl.spring.demo.limiter.v2.redis;
+package com.whl.spring.demo.limiter.redis;
 
-import com.whl.spring.demo.limiter.v2.AbstractRateLimiter;
-import com.whl.spring.demo.limiter.v2.RateWindow;
-import com.whl.spring.demo.limiter.v2.TimeBoundRateValue;
+import com.whl.spring.demo.limiter.AbstractRateLimiter;
+import com.whl.spring.demo.limiter.RateWindow;
+import com.whl.spring.demo.limiter.TimeBoundRateValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,7 +67,7 @@ public class RedisRateLimiter extends AbstractRateLimiter {
 
     @Override
     public void persist() {
-        String key = this.name + ":persist";
+        String key = this.name + KEY_SUFFIX;
         List<Long> times = new ArrayList<>();
 
         for (int i = 0; i < this.array.length(); i++) {
@@ -152,7 +152,7 @@ public class RedisRateLimiter extends AbstractRateLimiter {
         if (this.expire != null && this.expire != Duration.ZERO) {
             return this.expire;
         }
-        return Duration.ofSeconds(TimeBoundRateValue.DEFAULT_EXPIRE.getSeconds() * 2);
+        return TimeBoundRateValue.DEFAULT_EXPIRE.multipliedBy(2);
     }
 
 

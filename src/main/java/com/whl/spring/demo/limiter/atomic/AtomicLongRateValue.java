@@ -1,6 +1,6 @@
-package com.whl.spring.demo.limiter.v2.atomic;
+package com.whl.spring.demo.limiter.atomic;
 
-import com.whl.spring.demo.limiter.v2.RateValue;
+import com.whl.spring.demo.limiter.RateValue;
 import lombok.AllArgsConstructor;
 
 import java.util.concurrent.atomic.AtomicLong;

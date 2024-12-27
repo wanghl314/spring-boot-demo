@@ -1,33 +1,37 @@
-package com.whl.spring.demo.limiter.v1.redis;
+package com.whl.spring.demo.limiter.redis;
 
-import com.whl.spring.demo.limiter.v1.TimeBasedRateValue;
+import com.whl.spring.demo.limiter.RateValue;
+import com.whl.spring.demo.limiter.TimeBoundRateValue;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 
-public class RedisTimeBasedRateValue implements TimeBasedRateValue {
+public class RedisRateValue implements TimeBoundRateValue {
     private final RedisTemplate<String, Number> redisTemplate;
 
-    private final String key;
+    @Getter
+    @Setter
+    private String key;
 
+    @Getter
+    @Setter
     private Duration expire;
 
-    @SuppressWarnings("unchecked")
-    public RedisTimeBasedRateValue(RedisTemplate<?, ?> redisTemplate, String key) {
-        this.redisTemplate = (RedisTemplate<String, Number>) redisTemplate;
-        this.key = key;
+    public RedisRateValue(RedisTemplate<?, ?> redisTemplate) {
+        this(redisTemplate, null, null);
+    }
+
+    public RedisRateValue(RedisTemplate<?, ?> redisTemplate, String key) {
+        this(redisTemplate, key, null);
     }
 
     @SuppressWarnings("unchecked")
-    public RedisTimeBasedRateValue(RedisTemplate<?, ?> redisTemplate, String key, Duration expire) {
+    public RedisRateValue(RedisTemplate<?, ?> redisTemplate, String key, Duration expire) {
         this.redisTemplate = (RedisTemplate<String, Number>) redisTemplate;
         this.key = key;
         this.expire = expire;
-    }
-
-    @Override
-    public Duration getExpire() {
-        return this.expire;
     }
 
     @Override
@@ -41,12 +45,16 @@ public class RedisTimeBasedRateValue implements TimeBasedRateValue {
     }
 
     @Override
-    public void incr() {
+    public long incr() {
         Number value = this.redisTemplate.opsForValue().increment(this.key);
 
         if (value != null && value.longValue() == 1L) {
             this.expire();
         }
+        if (value != null) {
+            return value.longValue();
+        }
+        return 0L;
     }
 
     @Override
@@ -61,11 +69,8 @@ public class RedisTimeBasedRateValue implements TimeBasedRateValue {
     }
 
     @Override
-    public String toString() {
-        return "RedisTimeBasedRateValue{" +
-                "key='" + key + '\'' +
-                ", expire='" + expire + '\'' +
-                ", value='" + this.get() + '\'' +
-                '}';
+    public RateValue copy() {
+        return new RedisRateValue(this.redisTemplate, this.key, this.expire);
     }
+
 }

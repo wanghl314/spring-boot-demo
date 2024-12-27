@@ -1,7 +1,7 @@
-package com.whl.spring.demo.limiter.v2.atomic;
+package com.whl.spring.demo.limiter.atomic;
 
-import com.whl.spring.demo.limiter.v2.AbstractRateLimiter;
-import com.whl.spring.demo.limiter.v2.RateWindow;
+import com.whl.spring.demo.limiter.AbstractRateLimiter;
+import com.whl.spring.demo.limiter.RateWindow;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
