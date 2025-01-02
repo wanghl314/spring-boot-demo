@@ -35,7 +35,7 @@ public class RedisRateLimiterManager {
         return this.addRateLimiter(category, null, intervalInMs, limit);
     }
 
-    public RedisRateLimiter addRateLimiter(String category, String name, int intervalInMs, long limit) {
+    public synchronized RedisRateLimiter addRateLimiter(String category, String name, int intervalInMs, long limit) {
         List<RedisRateLimiter> rateLimiters = RATE_LIMITER_MAP.computeIfAbsent(category, k -> new ArrayList<>());
         RedisRateLimiter current = null;
 
