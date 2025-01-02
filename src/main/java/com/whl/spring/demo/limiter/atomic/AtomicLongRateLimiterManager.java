@@ -26,7 +26,7 @@ public class AtomicLongRateLimiterManager {
         return this.addRateLimiter(category, null, intervalInMs, limit);
     }
 
-    public AtomicLongRateLimiter addRateLimiter(String category, String name, int intervalInMs, long limit) {
+    public synchronized AtomicLongRateLimiter addRateLimiter(String category, String name, int intervalInMs, long limit) {
         List<AtomicLongRateLimiter> rateLimiters = RATE_LIMITER_MAP.computeIfAbsent(category, k -> new ArrayList<>());
         AtomicLongRateLimiter current = null;
 
