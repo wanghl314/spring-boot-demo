@@ -28,8 +28,8 @@ public class RateLimiterController {
         String category = "test";
         String globalKey = "global";
         String testKey = "/test";
-        RedisRateLimiter qps = this.rateLimiterManager.addRateLimiter(category, "qps", 1000, 2);
-        RedisRateLimiter qpm = this.rateLimiterManager.addRateLimiter(category, "qpm", 60000, 100);
+        RedisRateLimiter qps = this.rateLimiterManager.addRateLimiter(category, "2qps", 1000, 2);
+        RedisRateLimiter qpm = this.rateLimiterManager.addRateLimiter(category, "100qpm", 60000, 100);
         RedisRateLimiter custom1 = this.rateLimiterManager.addRateLimiter(category, 1000, 1);
         RedisRateLimiter custom2 = this.rateLimiterManager.addRateLimiter(category, 60000, 50);
         limiters.put(globalKey, Arrays.asList(qps, qpm));

@@ -7,27 +7,40 @@
     <meta name="theme-color" content="#000000">
     <link rel="shortcut icon" href="/favicon.ico">
     <style type="text/css">
-      #stat-info table {
-        vertical-align: top;
+      #query-area .field {
+        text-align: right;
+        white-space: nowrap;
       }
-      #stat-info table {
-        display: inline-block;
+      #ratelimiter {
+        width: 100%;
+      }
+      #form-area input[type="text"] {
+        width: 80%;
       }
     </style>
   </head>
   <body>
-    <div id="select-area">
-      <div>
-        <label>限流器: </label>
-        <select id="ratelimiter">
-          <option value="">请选择</option>
-        </select>
-      </div>
-      <form id="query-form" style="display: none;">
-        <input type="hidden" name="name" value="" />
-        <label>key: <input type="text" name="key" value="" /></label>
-        <button type="button" id="query" value="">监控</button>
-      </form>
+    <div id="query-area">
+      <table>
+        <tr>
+          <td class="field">限流器 : </td>
+          <td>
+            <select id="ratelimiter">
+              <option value="">请选择</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td class="field">Key : </td>
+          <td id="form-area">
+            <input type="hidden" name="name" value="" />
+            <label>
+              <input type="text" name="key" value="" />
+            </label>
+            <button type="button" id="query" value="">监控</button>
+          </td>
+        </tr>
+      </table>
     </div>
     <div id="stat-info"></div>
     <script src="/scripts/jquery.min.js"></script>
@@ -65,15 +78,14 @@
           const match = /name='(.*?)'/g.exec(limiter);
 
           if (match) {
-            $("#query-form").find("input[name='name']").val(match[1]);
-            $("#query-form").show();
+            $("#form-area").find("input[name='name']").val(match[1]);
           }
         });
 
         $(document).on("click", "#query", function() {
           reset();
-          const name = $("#query-form").find("input[name='name']").val();
-          const key = $("#query-form").find("input[name='key']").val();
+          const name = $("#form-area").find("input[name='name']").val();
+          const key = $("#form-area").find("input[name='key']").val();
 
           if (name === "") {
             alert("name is required");
