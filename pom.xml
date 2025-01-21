@@ -34,7 +34,7 @@
         <disruptor.version>4.0.0</disruptor.version>
         <!-- com/alibaba/druid-spring-boot-3-starter -->
         <druid.version>1.2.24</druid.version>
-        <!-- cn/hutool/hutool-core -->
+        <!-- cn/hutool/hutool-crypto -->
         <hutool.version>5.8.35</hutool.version>
         <java.version>21</java.version>
         <!-- org/openjdk/jmh/jmh-generator-annprocess -->
@@ -82,7 +82,7 @@
         <dependencies>
             <dependency>
                 <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
+                <artifactId>hutool-crypto</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
@@ -183,7 +183,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
+            <artifactId>hutool-crypto</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
