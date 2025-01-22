@@ -241,7 +241,7 @@ public abstract class AbstractRateLimiter implements RateLimiter {
         return (int) (timeId % this.sampleCount);
     }
 
-    private long calculateTime(long currentTime) {
+    protected long calculateTime(long currentTime) {
         return currentTime - currentTime % this.windowLengthInMs;
     }
 

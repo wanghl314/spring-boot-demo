@@ -112,6 +112,7 @@ public class RedisRateLimiter extends AbstractRateLimiter {
         builder.append("    </tr>");
         builder.append("  </thead>");
         builder.append("  <tbody>");
+        long current = this.calculateTime(System.currentTimeMillis());
         List<RateWindow<?>> statistics = this.statistics(key);
         long totalPassed = 0;
 
@@ -120,7 +121,12 @@ public class RedisRateLimiter extends AbstractRateLimiter {
                 long passed = window.get();
                 totalPassed += passed;
                 builder.append("    <tr>");
-                builder.append("      <td style=\"background-color:#fff;\">");
+
+                if (statistics.size() > 1 && window.getTime() == current) {
+                    builder.append("      <td style=\"background-color:#fff;font-weight:bold;\">");
+                } else {
+                    builder.append("      <td style=\"background-color:#fff;\">");
+                }
                 builder.append(window.getValue().getKey());
                 builder.append("</td>");
                 builder.append("      <td style=\"background-color:#fff;\">");
