@@ -15,6 +15,7 @@ JAVA_OPT="${JAVA_OPT} -jar ${BASE_DIR}/target/${SERVER}.jar"
 JAVA_OPT="${JAVA_OPT} --spring.config.additional-location=${CUSTOM_SEARCH_LOCATIONS}"
 JAVA_OPT="${JAVA_OPT} --logging.config=${BASE_DIR}/conf/logback-spring.xml"
 
+# check the logs output dir
 if [ ! -d "${BASE_DIR}/logs" ]; then
   mkdir ${BASE_DIR}/logs
 fi
@@ -23,5 +24,7 @@ fi
 if [ ! -f "${BASE_DIR}/logs/start.out" ]; then
   touch "${BASE_DIR}/logs/start.out"
 fi
+
 # start
-"$JAVA" ${JAVA_OPT} demo.demo
+COMMAND="$JAVA ${JAVA_OPT} demo.demo"
+${COMMAND}

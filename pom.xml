@@ -391,6 +391,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
+                    <configuration>
+                        <outputDirectory>${project.basedir}/libs</outputDirectory>
+                        <stripVersion>true</stripVersion>
+                        <includeScope>compile</includeScope>
+                        <includeScope>runtime</includeScope>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>copy-dependencies</id>
@@ -400,12 +406,6 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <outputDirectory>${project.basedir}/libs</outputDirectory>
-                        <stripVersion>true</stripVersion>
-                        <includeScope>compile</includeScope>
-                        <includeScope>runtime</includeScope>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -443,10 +443,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
@@ -467,6 +463,10 @@
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}</finalName>
