@@ -21,7 +21,7 @@ public class RedisConfig {
     private static Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
     @Bean
-    public BeanPostProcessor redisTemplateBeanPostProcessor() {
+    public static BeanPostProcessor redisTemplateBeanPostProcessor() {
         return new RedisTemplateBeanPostProcessor();
     }
 
