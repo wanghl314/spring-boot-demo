@@ -25,9 +25,9 @@
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.4</commons-collections4.version>
         <!-- commons-io/commons-io -->
-        <commons-io.version>2.18.0</commons-io.version>
+        <commons-io.version>2.19.0</commons-io.version>
         <!-- org/apache/commons/commons-text -->
-        <commons-text.version>1.13.0</commons-text.version>
+        <commons-text.version>1.13.1</commons-text.version>
         <!-- com/dameng/DmJdbcDriver18 -->
         <dmdbms.version>8.1.3.140</dmdbms.version>
         <!-- com/lmax/disruptor -->
@@ -35,14 +35,14 @@
         <!-- com/alibaba/druid-spring-boot-3-starter -->
         <druid.version>1.2.24</druid.version>
         <!-- cn/hutool/hutool-crypto -->
-        <hutool.version>5.8.36</hutool.version>
+        <hutool.version>5.8.37</hutool.version>
         <java.version>21</java.version>
         <!-- org/openjdk/jmh/jmh-generator-annprocess -->
         <jmh.version>1.37</jmh.version>
         <!-- com/github/axet/kaptcha -->
         <kaptcha.version>0.0.9</kaptcha.version>
         <!-- org/projectlombok/lombok -->
-        <lombok.version>1.18.36</lombok.version>
+        <lombok.version>1.18.38</lombok.version>
         <!-- org/mybatis/mybatis -->
         <mybatis.version>3.5.19</mybatis.version>
         <!-- com/baomidou/mybatis-plus-bom -->
