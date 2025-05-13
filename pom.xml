@@ -7,7 +7,7 @@
         <!-- org/springframework/boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -19,7 +19,7 @@
 
     <properties>
         <!-- org/owasp/antisamy/antisamy -->
-        <antisamy.version>1.7.7</antisamy.version>
+        <antisamy.version>1.7.8</antisamy.version>
         <!-- com/taobao/arthas/arthas-spring-boot-starter -->
         <arthas.version>4.0.5</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
@@ -35,7 +35,7 @@
         <!-- com/alibaba/druid-spring-boot-3-starter -->
         <druid.version>1.2.24</druid.version>
         <!-- cn/hutool/hutool-crypto -->
-        <hutool.version>5.8.37</hutool.version>
+        <hutool.version>5.8.38</hutool.version>
         <java.version>21</java.version>
         <!-- org/openjdk/jmh/jmh-generator-annprocess -->
         <jmh.version>1.37</jmh.version>
@@ -46,14 +46,14 @@
         <!-- org/mybatis/mybatis -->
         <mybatis.version>3.5.19</mybatis.version>
         <!-- com/baomidou/mybatis-plus-bom -->
-        <mybatis-plus.version>3.5.11</mybatis-plus.version>
+        <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <!-- org/mybatis/mybatis-spring -->
         <mybatis-spring.version>3.0.4</mybatis-spring.version>
         <!-- org/redisson/redisson -->
         <redisson.version>3.46.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
         <!-- org/springdoc/springdoc-openapi-starter-webmvc-api、org/springdoc/springdoc-openapi-starter-webmvc-ui -->
-        <springdoc-openapi.version>2.8.6</springdoc-openapi.version>
+        <springdoc-openapi.version>2.8.8</springdoc-openapi.version>
     </properties>
 
     <repositories>
@@ -172,7 +172,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi</artifactId>
+                <artifactId>springdoc-openapi-bom</artifactId>
                 <version>${springdoc-openapi.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
