@@ -28,7 +28,7 @@ public class MongoDBTests {
         String authenticationDatabase = "test";
         String database = "test";
         String host = "127.0.0.1";
-        String password = "wanghl314";
+        String password = "test";
         int port = 27017;
         String username = "test";
 
