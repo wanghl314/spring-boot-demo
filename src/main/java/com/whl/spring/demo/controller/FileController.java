@@ -4,11 +4,16 @@ import com.whl.spring.demo.bean.FileInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,6 +29,20 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/file")
 public class FileController {
+    @Autowired
+    private RestClient.Builder builder;
+
+    @GetMapping("/test")
+    public void test(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ResponseEntity<Resource> entity = builder.build()
+                .get()
+                .uri("http://oa.zyic.com/papi/file/download?id=1159440032398090261")
+                .retrieve()
+                .toEntity(Resource.class);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        IOUtils.copy(entity.getBody().getInputStream(), response.getOutputStream());
+    }
 
     @GetMapping("/list")
     public List<FileInfo> list(HttpServletRequest request) throws Exception {
