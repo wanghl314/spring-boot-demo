@@ -13,7 +13,7 @@ mvn clean package -DskipTests=true
 centos:oraclejdk-21是由centos镜像改造而来的，增加了oraclejdk-21
 ```bash
 docker build -t whl/spring-boot-demo .
-docker run -d -p 8080:8080 -p 8563:8563 -p 8180:8180 whl/spring-boot-demo
+docker run -d -p 8080:8080 -p 8563:8563 -p 8180:8180 -v E:\docker\spring-boot-demo\arthas:/usr/local/spring-boot-demo/arthas -v E:\docker\spring-boot-demo\conf:/usr/local/spring-boot-demo/conf -v E:\docker\spring-boot-demo\logs:/usr/local/spring-boot-demo/logs whl/spring-boot-demo
 ```
 
 - ## redission
