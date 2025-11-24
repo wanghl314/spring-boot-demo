@@ -1,13 +1,12 @@
 package com.whl.spring.demo.config;
 
-import org.owasp.validator.html.Policy;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.filter.OrderedFilter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.whl.spring.demo.filter.CookieFilter;
 import com.whl.spring.demo.filter.XssFilter;
+import org.owasp.validator.html.Policy;
+import org.springframework.boot.servlet.filter.OrderedFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FilterConfig {

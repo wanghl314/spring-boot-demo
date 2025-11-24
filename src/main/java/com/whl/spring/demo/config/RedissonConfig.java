@@ -7,9 +7,8 @@ import org.redisson.misc.RedisURI;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Sentinel;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisConnectionDetails;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisProperties;
 import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +27,7 @@ import java.util.List;
 @Configuration
 public class RedissonConfig {
     @Autowired
-    private RedisProperties redisProperties;
+    private DataRedisProperties redisProperties;
 
     @Autowired
     private ApplicationContext ctx;
@@ -46,11 +45,11 @@ public class RedissonConfig {
     @ConditionalOnMissingBean(RedissonClient.class)
     public RedissonClient redisson() throws IOException {
         Config config;
-        Method clusterMethod = ReflectionUtils.findMethod(RedisProperties.class, "getCluster");
-        Method usernameMethod = ReflectionUtils.findMethod(RedisProperties.class, "getUsername");
-        Method timeoutMethod = ReflectionUtils.findMethod(RedisProperties.class, "getTimeout");
-        Method connectTimeoutMethod = ReflectionUtils.findMethod(RedisProperties.class, "getConnectTimeout");
-        Method clientNameMethod = ReflectionUtils.findMethod(RedisProperties.class, "getClientName");
+        Method clusterMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getCluster");
+        Method usernameMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getUsername");
+        Method timeoutMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getTimeout");
+        Method connectTimeoutMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getConnectTimeout");
+        Method clientNameMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getClientName");
 
         Object timeoutValue = ReflectionUtils.invokeMethod(timeoutMethod, redisProperties);
         String prefix = getPrefix();
@@ -61,8 +60,8 @@ public class RedissonConfig {
         boolean isSentinel = false;
         boolean isCluster = false;
         if (hasConnectionDetails()) {
-            ObjectProvider<RedisConnectionDetails> provider = ctx.getBeanProvider(RedisConnectionDetails.class);
-            RedisConnectionDetails b = provider.getIfAvailable();
+            ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
+            DataRedisConnectionDetails b = provider.getIfAvailable();
             if (b != null) {
                 password = b.getPassword();
                 username = b.getUsername();
@@ -107,7 +106,7 @@ public class RedissonConfig {
             String sentinelMaster = null;
 
             if (redisProperties.getSentinel() != null) {
-                Method nodesMethod = ReflectionUtils.findMethod(Sentinel.class, "getNodes");
+                Method nodesMethod = ReflectionUtils.findMethod(DataRedisProperties.Sentinel.class, "getNodes");
                 Object nodesValue = ReflectionUtils.invokeMethod(nodesMethod, redisProperties.getSentinel());
                 if (nodesValue instanceof String) {
                     nodes = convert(prefix, Arrays.asList(((String) nodesValue).split(",")));
@@ -121,8 +120,8 @@ public class RedissonConfig {
             String sentinelUsername = null;
             String sentinelPassword = null;
             if (hasConnectionDetails()) {
-                ObjectProvider<RedisConnectionDetails> provider = ctx.getBeanProvider(RedisConnectionDetails.class);
-                RedisConnectionDetails b = provider.getIfAvailable();
+                ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
+                DataRedisConnectionDetails b = provider.getIfAvailable();
                 if (b != null && b.getSentinel() != null) {
                     database = b.getSentinel().getDatabase();
                     sentinelMaster = b.getSentinel().getMaster();
@@ -162,8 +161,8 @@ public class RedissonConfig {
             }
 
             if (hasConnectionDetails()) {
-                ObjectProvider<RedisConnectionDetails> provider = ctx.getBeanProvider(RedisConnectionDetails.class);
-                RedisConnectionDetails b = provider.getIfAvailable();
+                ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
+                DataRedisConnectionDetails b = provider.getIfAvailable();
                 if (b != null && b.getCluster() != null) {
                     nodes = convertNodes(prefix, (List<Object>) (Object) b.getCluster().getNodes());
                 }
@@ -188,8 +187,8 @@ public class RedissonConfig {
             String singleAddr = prefix + redisProperties.getHost() + ":" + redisProperties.getPort();
 
             if (hasConnectionDetails()) {
-                ObjectProvider<RedisConnectionDetails> provider = ctx.getBeanProvider(RedisConnectionDetails.class);
-                RedisConnectionDetails b = provider.getIfAvailable();
+                ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
+                DataRedisConnectionDetails b = provider.getIfAvailable();
                 if (b != null && b.getStandalone() != null) {
                     database = b.getStandalone().getDatabase();
                     singleAddr = prefix + b.getStandalone().getHost() + ":" + b.getStandalone().getPort();
@@ -214,12 +213,12 @@ public class RedissonConfig {
     }
 
     private void initSSL(BaseConfig<?> config) {
-        Method getSSLMethod = ReflectionUtils.findMethod(RedisProperties.class, "getSsl");
+        Method getSSLMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getSsl");
         if (getSSLMethod == null) {
             return;
         }
 
-        RedisProperties.Ssl ssl = redisProperties.getSsl();
+        DataRedisProperties.Ssl ssl = redisProperties.getSsl();
         if (ssl.getBundle() == null) {
             return;
         }
@@ -241,8 +240,8 @@ public class RedissonConfig {
 
     private String getPrefix() {
         String prefix = RedisURI.REDIS_PROTOCOL;
-        Method isSSLMethod = ReflectionUtils.findMethod(RedisProperties.class, "isSsl");
-        Method getSSLMethod = ReflectionUtils.findMethod(RedisProperties.class, "getSsl");
+        Method isSSLMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "isSsl");
+        Method getSSLMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getSsl");
         if (isSSLMethod != null) {
             if ((Boolean) ReflectionUtils.invokeMethod(isSSLMethod, redisProperties)) {
                 prefix = RedisURI.REDIS_SSL_PROTOCOL;
