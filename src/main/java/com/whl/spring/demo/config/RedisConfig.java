@@ -10,9 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 
@@ -21,8 +22,8 @@ public class RedisConfig {
     private static Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
     @Bean
-    public static BeanPostProcessor redisTemplateBeanPostProcessor() {
-        return new RedisTemplateBeanPostProcessor();
+    public static BeanPostProcessor redisTemplateBeanPostProcessor(ObjectMapper objectMapper) {
+        return new RedisTemplateBeanPostProcessor(objectMapper);
     }
 
     @Configuration
@@ -41,6 +42,11 @@ public class RedisConfig {
     }
 
     private static class RedisTemplateBeanPostProcessor implements BeanPostProcessor {
+        private final ObjectMapper objectMapper;
+
+        public RedisTemplateBeanPostProcessor(ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+        }
 
         @Override
         public Object postProcessAfterInitialization(@Nonnull Object bean, @Nonnull String beanName) throws BeansException {
@@ -48,7 +54,7 @@ public class RedisConfig {
                     !(bean instanceof StringRedisTemplate)) {
                 try {
                     RedisSerializer<String> keySerializer = new StringRedisSerializer();
-                    RedisSerializer<Object> valueSerializer = new GenericJackson2JsonRedisSerializer();
+                    RedisSerializer<Object> valueSerializer = new GenericJacksonJsonRedisSerializer(this.objectMapper);
                     redisTemplate.setKeySerializer(keySerializer);
                     redisTemplate.setHashKeySerializer(keySerializer);
                     redisTemplate.setValueSerializer(valueSerializer);

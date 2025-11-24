@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ import java.util.*;
 @RequestMapping("/Default/boc_http_adp_gyzx/0.1/adapterAllHttp")
 public class ESBController {
     @Autowired
-    private JsonMapper mapper;
+    private ObjectMapper mapper;
 
     @RequestMapping(
             method = { RequestMethod.GET, RequestMethod.POST },
