@@ -11,9 +11,8 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 import java.util.Objects;
 
@@ -22,8 +21,8 @@ public class RedisConfig {
     private static Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
     @Bean
-    public static BeanPostProcessor redisTemplateBeanPostProcessor(ObjectMapper objectMapper) {
-        return new RedisTemplateBeanPostProcessor(objectMapper);
+    public static BeanPostProcessor redisTemplateBeanPostProcessor() {
+        return new RedisTemplateBeanPostProcessor();
     }
 
     @Configuration
@@ -42,19 +41,20 @@ public class RedisConfig {
     }
 
     private static class RedisTemplateBeanPostProcessor implements BeanPostProcessor {
-        private final ObjectMapper objectMapper;
-
-        public RedisTemplateBeanPostProcessor(ObjectMapper objectMapper) {
-            this.objectMapper = objectMapper;
-        }
 
         @Override
         public Object postProcessAfterInitialization(@Nonnull Object bean, @Nonnull String beanName) throws BeansException {
             if (bean instanceof RedisTemplate<?, ?> redisTemplate &&
                     !(bean instanceof StringRedisTemplate)) {
                 try {
-                    RedisSerializer<String> keySerializer = new StringRedisSerializer();
-                    RedisSerializer<Object> valueSerializer = new GenericJacksonJsonRedisSerializer(this.objectMapper);
+                    StringRedisSerializer keySerializer = new StringRedisSerializer();
+                    GenericJacksonJsonRedisSerializer valueSerializer = GenericJacksonJsonRedisSerializer.builder()
+                            .enableDefaultTyping(
+                                    BasicPolymorphicTypeValidator.builder()
+                                            .allowIfBaseType(Object.class)
+                                            .allowIfSubType((ctx, clazz) -> true)
+                                            .build())
+                            .build();
                     redisTemplate.setKeySerializer(keySerializer);
                     redisTemplate.setHashKeySerializer(keySerializer);
                     redisTemplate.setValueSerializer(valueSerializer);
