@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -39,6 +41,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public int deleteById(Long id) throws Exception {
         return this.userDao.deleteById(id);
+    }
+
+    @Override
+    public Map<String, Object> selectAsMap() throws Exception {
+        Map<String, Object> data = this.userDao.selectAsMap();
+        data.get("id");
+        return data;
     }
 
 }

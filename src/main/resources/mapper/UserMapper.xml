@@ -96,4 +96,16 @@
     ]]>
     </delete>
 
+    <select id="selectAsMap" resultType="hashmap">
+    <![CDATA[
+        select id, username, age from sbd_user limit 1
+    ]]>
+    </select>
+
+    <select id="selectAsMap" databaseId="oracle" resultType="hashmap">
+    <![CDATA[
+        select id, username, age from sbd_user where rownum <= 1
+    ]]>
+    </select>
+
 </mapper>

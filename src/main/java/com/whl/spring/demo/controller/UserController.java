@@ -85,4 +85,9 @@ public class UserController {
         return this.userService.deleteById(id);
     }
 
+    @GetMapping("/selectAsMap")
+    public Map<String, Object> selectAsMap() throws Exception {
+        return this.userService.selectAsMap();
+    }
+
 }

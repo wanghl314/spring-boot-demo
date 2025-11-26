@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whl.spring.demo.entity.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Map;
+
 @Mapper
 public interface UserDao {
     Page<UserEntity> list(Page<?> page) throws Exception;
@@ -15,4 +17,6 @@ public interface UserDao {
     int update(UserEntity user) throws Exception;
 
     int deleteById(Long id) throws Exception;
+
+    Map<String, Object> selectAsMap() throws Exception;
 }
