@@ -15,8 +15,8 @@ import java.io.Serializable;
 
 @Document("demo")
 @CompoundIndexes({
-        @CompoundIndex(def = "{'id':-1}", background = true, unique = true),
-        @CompoundIndex(def = "{'title':-1}", background = true)
+        @CompoundIndex(def = "{'id':-1}", unique = true),
+        @CompoundIndex(def = "{'title':-1}")
 })
 @Getter
 public class DemoEntity implements Serializable {

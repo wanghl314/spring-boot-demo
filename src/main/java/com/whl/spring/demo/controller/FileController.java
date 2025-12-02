@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -64,8 +65,8 @@ public class FileController {
         String filename = file.getOriginalFilename();
         String suffix = "";
 
-        if (StringUtils.contains(filename, ".")) {
-            suffix = filename.substring(filename.lastIndexOf("."));
+        if (Strings.CS.contains(filename, ".")) {
+            suffix = StringUtils.substring(filename, Strings.CS.lastIndexOf(filename, "."));
         }
         Path path = this.getFileStorePath();
         Path destination = path.resolve(UUID.randomUUID() + suffix);

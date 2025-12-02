@@ -3,6 +3,7 @@ package com.whl.spring.demo.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
@@ -127,7 +128,7 @@ public class RestClientController {
         while (it.hasNext()) {
             String headerName = it.next();
 
-            if (!StringUtils.equalsAnyIgnoreCase(headerName, HttpHeaders.HOST)) {
+            if (!Strings.CI.equalsAny(headerName, HttpHeaders.HOST)) {
                 List<String> headerValues = requestHeaders.get(headerName);
 
                 if (headerValues == null) {

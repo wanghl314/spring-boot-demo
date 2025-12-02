@@ -6,6 +6,7 @@ import com.whl.spring.demo.limiter.redis.RedisRateLimiterManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,7 +130,7 @@ public class RateLimiterController {
 
         if (CollectionUtils.isNotEmpty(rateLimiters)) {
             for (RedisRateLimiter limiter : rateLimiters) {
-                if (StringUtils.equals(limiter.getName(), name)) {
+                if (Strings.CS.equals(limiter.getName(), name)) {
                     if (!limiter.isEnabled()) {
                         result.put("code", 3);
                         result.put("msg", "RateLimiter name=" + name + " is disabled");

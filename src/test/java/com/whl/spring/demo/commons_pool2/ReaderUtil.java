@@ -84,7 +84,7 @@ public class ReaderUtil {
         @Override
         public void run() {
             try {
-                String original = RandomStringUtils.randomAlphanumeric(100);
+                String original = RandomStringUtils.secure().nextAlphanumeric(100);
                 String actual = this.readerUtil.readToString(new CharArrayReader(original.toCharArray()));
                 System.out.println("Thread " + String.format("%02d", this.index) + " -> readToString succeed");
             } catch (RuntimeException e) {

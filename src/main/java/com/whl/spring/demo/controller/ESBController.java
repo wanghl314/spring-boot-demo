@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -50,7 +51,7 @@ public class ESBController {
     private ResponseEntity<byte[]> response(HttpServletRequest request) throws IOException, URISyntaxException, ServletException {
         String header = request.getHeader("Individuation-Function-ID");
 
-        if (StringUtils.equals(header, "37000011")) {
+        if (Strings.CS.equals(header, "37000011")) {
             String requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=" +
                     request.getParameter("access_token") + "&type=" + request.getParameter("type");
             RequestEntity<?> requestEntity = createRequestEntity(request, requestUrl);
@@ -64,7 +65,7 @@ public class ESBController {
             String jsonString = mapper.writeValueAsString(data);
             System.out.println(jsonString);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonString.getBytes(StandardCharsets.UTF_8));
-        } else if (StringUtils.equals(header, "37000012")) {
+        } else if (Strings.CS.equals(header, "37000012")) {
             String requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/media/get?access_token=" +
                     request.getParameter("access_token") + "&media_id=" + request.getParameter("media_id");
             RequestEntity<?> requestEntity = createRequestEntity(request, requestUrl);
@@ -130,7 +131,7 @@ public class ESBController {
         HttpHeaders headers = new HttpHeaders();
         List<String> headerNames = Collections.list(request.getHeaderNames());
         for (String headerName : headerNames) {
-            if (StringUtils.equalsAnyIgnoreCase(headerName, "Host", "Content-Length")) {
+            if (Strings.CI.equalsAny(headerName, "Host", "Content-Length")) {
                 continue;
             }
             List<String> headerValues = Collections.list(request.getHeaders(headerName));

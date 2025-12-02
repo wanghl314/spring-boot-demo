@@ -30,10 +30,10 @@ public class UserController {
     @GetMapping("/test")
     public Object test() {
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("a", RandomStringUtils.randomAlphabetic(10));
-        data.put("b", RandomStringUtils.randomAlphanumeric(10));
-        data.put("c", RandomStringUtils.randomAscii(10));
-        data.put("d", RandomStringUtils.randomNumeric(10));
+        data.put("a", RandomStringUtils.secure().nextAlphabetic(10));
+        data.put("b", RandomStringUtils.secure().nextAlphanumeric(10));
+        data.put("c", RandomStringUtils.secure().nextAscii(10));
+        data.put("d", RandomStringUtils.secure().nextNumeric(10));
         return data;
     }
 

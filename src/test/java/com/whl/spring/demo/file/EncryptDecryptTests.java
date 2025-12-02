@@ -1,18 +1,17 @@
 package com.whl.spring.demo.file;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -21,21 +20,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EncryptDecryptTests {
@@ -54,7 +40,7 @@ public class EncryptDecryptTests {
     @BeforeAll
     public static void init() {
         String baseDir = "C:\\Users\\Administrator\\Desktop";
-        aesKey = RandomStringUtils.randomAlphanumeric(16);
+        aesKey = RandomStringUtils.secure().nextAlphanumeric(16);
         originalFile = baseDir + File.separator + "nginx.txt";
         encryptFile = baseDir + File.separator + "nginx-new.txt.enc";
         decryptFile = baseDir + File.separator + "nginx-new.txt";
@@ -169,7 +155,7 @@ public class EncryptDecryptTests {
 
                 for (int j = 0; j < dataLength; j++) {
                     if (i < randoms.length && j == randoms[i]) {
-                        dos.writeUTF(RandomStringUtils.randomAlphanumeric(random.nextInt(10)));
+                        dos.writeUTF(RandomStringUtils.secure().nextAlphanumeric(random.nextInt(10)));
                         i++;
                     }
                     dos.writeByte(data[j]);

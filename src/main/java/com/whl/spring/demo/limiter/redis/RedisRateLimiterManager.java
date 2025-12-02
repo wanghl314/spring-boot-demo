@@ -1,6 +1,7 @@
 package com.whl.spring.demo.limiter.redis;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class RedisRateLimiterManager {
      */
     public RedisRateLimiter buildRateLimiter(String name, int intervalInMs, long limit) {
         RedisRateLimiter exists = RATE_LIMITER_LIST.stream()
-                .filter(limiter -> StringUtils.equalsIgnoreCase(limiter.getName(), RATE_LIMITER_PREFIX + name))
+                .filter(limiter -> Strings.CI.equals(limiter.getName(), RATE_LIMITER_PREFIX + name))
                 .findFirst()
                 .orElse(null);
 
