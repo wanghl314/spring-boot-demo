@@ -21,7 +21,7 @@
         <!-- org/owasp/antisamy/antisamy -->
         <antisamy.version>1.7.8</antisamy.version>
         <!-- com/taobao/arthas/arthas-spring-boot-starter -->
-        <arthas.version>4.1.2</arthas.version>
+        <arthas.version>4.1.4</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <!-- commons-io/commons-io -->
