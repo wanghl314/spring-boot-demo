@@ -2,7 +2,12 @@ package com.whl.spring.demo.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.*;
+import org.redisson.api.RedissonReactiveClient;
+import org.redisson.api.RedissonRxClient;
+import org.redisson.config.ClusterServersConfig;
+import org.redisson.config.Config;
+import org.redisson.config.SentinelServersConfig;
+import org.redisson.config.SingleServerConfig;
 import org.redisson.misc.RedisURI;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +19,9 @@ import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.util.ReflectionUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -32,18 +37,24 @@ public class RedissonConfig {
     @Autowired
     private ApplicationContext ctx;
 
-    private boolean hasConnectionDetails() {
-        try {
-            Class.forName("org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+    @Bean
+    @Lazy
+    @ConditionalOnMissingBean(RedissonReactiveClient.class)
+    public RedissonReactiveClient redissonReactive(RedissonClient redisson) {
+        return redisson.reactive();
     }
 
+    @Bean
+    @Lazy
+    @ConditionalOnMissingBean(RedissonRxClient.class)
+    public RedissonRxClient redissonRxJava(RedissonClient redisson) {
+        return redisson.rxJava();
+    }
+
+    @SuppressWarnings("MethodLength")
     @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingBean(RedissonClient.class)
-    public RedissonClient redisson() throws IOException {
+    public RedissonClient redisson() {
         Config config;
         Method clusterMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getCluster");
         Method usernameMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getUsername");
@@ -59,19 +70,18 @@ public class RedissonConfig {
         String password = redisProperties.getPassword();
         boolean isSentinel = false;
         boolean isCluster = false;
-        if (hasConnectionDetails()) {
-            ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
-            DataRedisConnectionDetails b = provider.getIfAvailable();
-            if (b != null) {
-                password = b.getPassword();
-                username = b.getUsername();
 
-                if (b.getSentinel() != null) {
-                    isSentinel = true;
-                }
-                if (b.getCluster() != null) {
-                    isCluster = true;
-                }
+        ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
+        DataRedisConnectionDetails b = provider.getIfAvailable();
+        if (b != null) {
+            password = b.getPassword();
+            username = b.getUsername();
+
+            if (b.getSentinel() != null) {
+                isSentinel = true;
+            }
+            if (b.getCluster() != null) {
+                isCluster = true;
             }
         }
 
@@ -119,27 +129,25 @@ public class RedissonConfig {
 
             String sentinelUsername = null;
             String sentinelPassword = null;
-            if (hasConnectionDetails()) {
-                ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
-                DataRedisConnectionDetails b = provider.getIfAvailable();
-                if (b != null && b.getSentinel() != null) {
-                    database = b.getSentinel().getDatabase();
-                    sentinelMaster = b.getSentinel().getMaster();
-                    nodes = convertNodes(prefix, (List<Object>) (Object) b.getSentinel().getNodes());
-                    sentinelUsername = b.getSentinel().getUsername();
-                    sentinelPassword = b.getSentinel().getPassword();
-                }
+
+            if (b != null && b.getSentinel() != null) {
+                database = b.getSentinel().getDatabase();
+                sentinelMaster = b.getSentinel().getMaster();
+                nodes = convertNodes(prefix, (List<Object>) (Object) b.getSentinel().getNodes());
+                sentinelUsername = b.getSentinel().getUsername();
+                sentinelPassword = b.getSentinel().getPassword();
             }
 
-            config = new Config();
+            config = new Config()
+                    .setUsername(username)
+                    .setPassword(password);
+
             SentinelServersConfig c = config.useSentinelServers()
                     .setMasterName(sentinelMaster)
                     .addSentinelAddress(nodes)
                     .setSentinelPassword(sentinelPassword)
                     .setSentinelUsername(sentinelUsername)
                     .setDatabase(database)
-                    .setUsername(username)
-                    .setPassword(password)
                     .setClientName(clientName);
             if (connectTimeout != null) {
                 c.setConnectTimeout(connectTimeout);
@@ -147,9 +155,9 @@ public class RedissonConfig {
             if (connectTimeoutMethod != null && timeout != null) {
                 c.setTimeout(timeout);
             }
-            initSSL(c);
+            initSSL(config);
         } else if ((clusterMethod != null && ReflectionUtils.invokeMethod(clusterMethod, redisProperties) != null)
-                    || isCluster) {
+                || isCluster) {
 
             String[] nodes = {};
             if (clusterMethod != null && ReflectionUtils.invokeMethod(clusterMethod, redisProperties) != null) {
@@ -160,19 +168,15 @@ public class RedissonConfig {
                 nodes = convert(prefix, nodesObject);
             }
 
-            if (hasConnectionDetails()) {
-                ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
-                DataRedisConnectionDetails b = provider.getIfAvailable();
-                if (b != null && b.getCluster() != null) {
-                    nodes = convertNodes(prefix, (List<Object>) (Object) b.getCluster().getNodes());
-                }
+            if (b != null && b.getCluster() != null) {
+                nodes = convertNodes(prefix, (List<Object>) (Object) b.getCluster().getNodes());
             }
 
-            config = new Config();
+            config = new Config()
+                    .setUsername(username)
+                    .setPassword(password);
             ClusterServersConfig c = config.useClusterServers()
                     .addNodeAddress(nodes)
-                    .setUsername(username)
-                    .setPassword(password)
                     .setClientName(clientName);
             if (connectTimeout != null) {
                 c.setConnectTimeout(connectTimeout);
@@ -180,26 +184,22 @@ public class RedissonConfig {
             if (connectTimeoutMethod != null && timeout != null) {
                 c.setTimeout(timeout);
             }
-            initSSL(c);
+            initSSL(config);
         } else {
-            config = new Config();
+            config = new Config()
+                    .setUsername(username)
+                    .setPassword(password);
 
             String singleAddr = prefix + redisProperties.getHost() + ":" + redisProperties.getPort();
 
-            if (hasConnectionDetails()) {
-                ObjectProvider<DataRedisConnectionDetails> provider = ctx.getBeanProvider(DataRedisConnectionDetails.class);
-                DataRedisConnectionDetails b = provider.getIfAvailable();
-                if (b != null && b.getStandalone() != null) {
-                    database = b.getStandalone().getDatabase();
-                    singleAddr = prefix + b.getStandalone().getHost() + ":" + b.getStandalone().getPort();
-                }
+            if (b != null && b.getStandalone() != null) {
+                database = b.getStandalone().getDatabase();
+                singleAddr = prefix + b.getStandalone().getHost() + ":" + b.getStandalone().getPort();
             }
 
             SingleServerConfig c = config.useSingleServer()
                     .setAddress(singleAddr)
                     .setDatabase(database)
-                    .setUsername(username)
-                    .setPassword(password)
                     .setClientName(clientName);
             if (connectTimeout != null) {
                 c.setConnectTimeout(connectTimeout);
@@ -207,12 +207,12 @@ public class RedissonConfig {
             if (connectTimeoutMethod != null && timeout != null) {
                 c.setTimeout(timeout);
             }
-            initSSL(c);
+            initSSL(config);
         }
         return Redisson.create(config);
     }
 
-    private void initSSL(BaseConfig<?> config) {
+    private void initSSL(Config config) {
         Method getSSLMethod = ReflectionUtils.findMethod(DataRedisProperties.class, "getSsl");
         if (getSSLMethod == null) {
             return;

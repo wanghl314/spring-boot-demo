@@ -1,13 +1,13 @@
 package com.whl.spring.demo.jmh;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whl.spring.demo.bean.FileInfo;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +29,7 @@ public class JsonJMHTest {
      * 测试String to Object
      */
     @Benchmark
-    public FileInfo objectMapper2ObjTest() throws JsonProcessingException {
+    public FileInfo objectMapper2ObjTest() throws JacksonException {
         return objectMapper.readValue(json, FileInfo.class);
     }
 
@@ -37,7 +37,7 @@ public class JsonJMHTest {
      * 测试Object to String
      */
     @Benchmark
-    public String objectMapper2StringTest() throws JsonProcessingException {
+    public String objectMapper2StringTest() throws JacksonException {
         return objectMapper.writeValueAsString(fileInfo);
     }
 
