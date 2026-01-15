@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
@@ -25,6 +28,12 @@ public class JacksonConfig {
         simpleModule.addDeserializer(String.class, new XssJsonDeserializer(antisamyPolicy));
         JsonMapper jsonMapper = builder.addModule(simpleModule).build();
         return new JacksonJsonHttpMessageConverter(jsonMapper);
+    }
+
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
+        return new ByteArrayHttpMessageConverter();
     }
 
     static class XssJsonDeserializer extends ValueDeserializer<String> {
