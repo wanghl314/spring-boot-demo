@@ -5,12 +5,10 @@ import org.owasp.validator.html.CleanResults;
 import org.owasp.validator.html.Policy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
@@ -19,21 +17,25 @@ import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
 
 @Configuration
-public class JacksonConfig {
+public class JacksonConfig implements WebMvcConfigurer {
     private static Logger logger = LoggerFactory.getLogger(JacksonConfig.class);
 
-    @Bean
-    public JacksonJsonHttpMessageConverter xssMappingJackson2HttpMessageConverter(Policy antisamyPolicy, JsonMapper.Builder builder) {
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addDeserializer(String.class, new XssJsonDeserializer(antisamyPolicy));
-        JsonMapper jsonMapper = builder.addModule(simpleModule).build();
-        return new JacksonJsonHttpMessageConverter(jsonMapper);
+    private final Policy antisamyPolicy;
+
+    private final JsonMapper.Builder jsonMapperBuilder;
+
+    public JacksonConfig(Policy antisamyPolicy, JsonMapper.Builder jsonMapperBuilder) {
+        this.antisamyPolicy = antisamyPolicy;
+        this.jsonMapperBuilder = jsonMapperBuilder;
     }
 
-    @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
-        return new ByteArrayHttpMessageConverter();
+    @Override
+    public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addDeserializer(String.class, new XssJsonDeserializer(this.antisamyPolicy));
+        JsonMapper jsonMapper = this.jsonMapperBuilder.addModule(simpleModule).build();
+        JacksonJsonHttpMessageConverter converter = new JacksonJsonHttpMessageConverter(jsonMapper);
+        builder.withJsonConverter(converter);
     }
 
     static class XssJsonDeserializer extends ValueDeserializer<String> {
