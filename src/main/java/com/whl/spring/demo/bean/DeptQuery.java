@@ -7,7 +7,7 @@ import java.io.Serial;
 
 @Getter
 @Setter
-public class UserQuery extends PageQuery {
+public class DeptQuery extends PageQuery {
     @Serial
-    private static final long serialVersionUID = -6504289870919303122L;
+    private static final long serialVersionUID = 7929595155984394306L;
 }

@@ -142,7 +142,7 @@ public class ESBController {
         return headers;
     }
 
-    private ResponseEntity<byte[]> route(RequestEntity requestEntity) {
+    private ResponseEntity<byte[]> route(RequestEntity<?> requestEntity) {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("192.168.1.122", 3128));
         requestFactory.setProxy(proxy);

@@ -39,7 +39,7 @@ public class UserController {
 
     @PostMapping(value = "/list")
     public Page<UserDto> list(@RequestBody @Validated UserQuery query) throws Exception {
-        Page<UserDto> result = new Page<UserDto>();
+        Page<UserDto> result = new Page<>();
         Page<UserEntity> data = this.userService.list(new Page<UserEntity>(query.getPageNo(), query.getPageSize()));
 
         if (data != null) {

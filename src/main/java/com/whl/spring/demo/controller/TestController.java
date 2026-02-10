@@ -43,7 +43,7 @@ public class TestController {
 
     @PostMapping(value = "/list")
     public Page<TestDto> list(@RequestBody @Validated TestQuery query) throws Exception {
-        Page<TestDto> result = new Page<TestDto>();
+        Page<TestDto> result = new Page<>();
         Page<TestEntity> data = this.testService.list(new Page<TestEntity>(query.getPageNo(), query.getPageSize()));
 
         if (data != null) {
