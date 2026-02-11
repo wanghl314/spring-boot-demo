@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +15,7 @@ import java.util.Properties;
 
 @Configuration
 public class MybatisConfig {
+    private static Logger logger = LoggerFactory.getLogger(MybatisConfig.class);
 
     @Bean
     public DatabaseIdProvider databaseIdProvider() {
@@ -35,6 +38,7 @@ public class MybatisConfig {
                                                              DatabaseIdProvider databaseIdProvider) throws Exception {
             String databaseId = databaseIdProvider.getDatabaseId(dataSource);
             DbType dbType = DbType.getDbType(databaseId);
+            logger.info("{}", dbType);
             MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
             interceptor.addInnerInterceptor(new PaginationInnerInterceptor(dbType));
             return interceptor;
