@@ -10,6 +10,14 @@ public interface DeptDao {
     @SelectProvider(value = DeptProvider.class, method = "list")
     Page<DeptEntity> list(Page<?> page) throws Exception;
 
+    @SelectProvider.List({
+            @SelectProvider(value = DeptProvider.class, method = "getFirst_mysql", databaseId = "mysql"),
+            @SelectProvider(value = DeptProvider.class, method = "getFirst_oracle", databaseId = "oracle"),
+            @SelectProvider(value = DeptProvider.class, method = "getFirst_sqlserver", databaseId = "sqlserver"),
+            @SelectProvider(value = DeptProvider.class, method = "getFirst_postgresql", databaseId = "postgresql")
+    })
+    DeptEntity getFirst() throws Exception;
+
     @SelectProvider(value = DeptProvider.class, method = "getById")
     DeptEntity getById(@Param("id") Long id) throws Exception;
 

@@ -23,6 +23,11 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    public DeptEntity getFirst() throws Exception {
+        return this.deptDao.getFirst();
+    }
+
+    @Override
     public DeptEntity getById(Long id) throws Exception {
         return this.deptDao.getById(id);
     }

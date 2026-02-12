@@ -39,6 +39,16 @@ public class DeptController {
         return result;
     }
 
+    @GetMapping("/getFirst")
+    public DeptDto getFirst() throws Exception {
+        DeptEntity entity = this.deptService.getFirst();
+
+        if (entity != null) {
+            return entity.toDto();
+        }
+        return null;
+    }
+
     @GetMapping("/getById/{id}")
     public DeptDto getById(@PathVariable Long id) throws Exception {
         DeptEntity entity = this.deptService.getById(id);

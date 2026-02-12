@@ -15,6 +15,37 @@ public class DeptProvider {
                 .toString();
     }
 
+    public String getFirst_mysql() {
+        return new SQL()
+                .SELECT("id, name, showorder")
+                .FROM("sbd_dept")
+                .LIMIT("1")
+                .toString();
+    }
+
+    public String getFirst_oracle() {
+        return new SQL()
+                .SELECT("id, name, showorder")
+                .FROM("sbd_dept")
+                .WHERE("rownum <= 1")
+                .toString();
+    }
+
+    public String getFirst_sqlserver() {
+        return new SQL()
+                .SELECT("top 1 id, name, showorder")
+                .FROM("sbd_dept")
+                .toString();
+    }
+
+    public String getFirst_postgresql() {
+        return new SQL()
+                .SELECT("id, name, showorder")
+                .FROM("sbd_dept")
+                .LIMIT("1")
+                .toString();
+    }
+
     public String getById(Long id) {
         return new SQL()
                 .SELECT("id, name, showorder")

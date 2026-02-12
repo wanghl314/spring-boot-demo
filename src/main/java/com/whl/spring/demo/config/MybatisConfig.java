@@ -38,7 +38,7 @@ public class MybatisConfig {
                                                              DatabaseIdProvider databaseIdProvider) throws Exception {
             String databaseId = databaseIdProvider.getDatabaseId(dataSource);
             DbType dbType = DbType.getDbType(databaseId);
-            logger.info("{}", dbType);
+            logger.info("{}", dbType.getDb());
             MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
             interceptor.addInnerInterceptor(new PaginationInnerInterceptor(dbType));
             return interceptor;
