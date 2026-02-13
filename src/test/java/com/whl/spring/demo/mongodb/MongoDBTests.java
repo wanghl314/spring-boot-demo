@@ -54,7 +54,7 @@ public class MongoDBTests {
             if (!StringUtils.isEmpty(sql)) {
                 Document result = mongoDatabase.runCommand(Document.parse(sql));
                 Number ok = (Number) result.get("ok");
-                Assertions.assertEquals(ok.intValue(), 1);
+                Assertions.assertEquals(1, ok.intValue());
 
                 if (ok.intValue() == 1) {
                     System.out.println("OK");
