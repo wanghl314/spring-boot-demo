@@ -16,7 +16,7 @@ docker build -t whl/spring-boot-demo .
 docker run -d -p 8080:8080 -p 8563:8563 -p 8180:8180 -v E:\docker\spring-boot-demo\arthas:/usr/local/spring-boot-demo/arthas -v E:\docker\spring-boot-demo\conf:/usr/local/spring-boot-demo/conf -v E:\docker\spring-boot-demo\logs:/usr/local/spring-boot-demo/logs --name spring-boot-demo whl/spring-boot-demo
 ```
 
-- ## redission
+- ## redisson
 本项目只引入下面的依赖，目的是只想使用redisson的分布式锁功能，并不想更改RedisTemplate底层组件
 ```xml
 <dependency>
@@ -33,4 +33,4 @@ docker run -d -p 8080:8080 -p 8563:8563 -p 8180:8180 -v E:\docker\spring-boot-de
     <version>${redisson.version}</version>
 </dependency>
 ```
-redission自动装配相关代码位置：redisson-spring-boot-starter-${redisson.version}.jar!\org\redisson\spring\starter\RedissonAutoConfiguration
+redisson自动装配相关代码位置：redisson-spring-boot-starter-${redisson.version}.jar!\org\redisson\spring\starter\RedissonAutoConfiguration
