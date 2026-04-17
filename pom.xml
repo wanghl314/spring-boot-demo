@@ -53,7 +53,7 @@
         <redisson.version>4.3.1</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
         <!-- org/springdoc/springdoc-openapi-bom -->
-        <springdoc-openapi.version>3.0.2</springdoc-openapi.version>
+        <springdoc-openapi.version>3.0.3</springdoc-openapi.version>
     </properties>
 
     <repositories>
