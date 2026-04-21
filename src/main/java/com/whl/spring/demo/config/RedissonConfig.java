@@ -8,6 +8,7 @@ import org.redisson.config.*;
 import org.redisson.misc.RedisURI;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.data.redis.autoconfigure.DataRedisConnectionDetails;
 import org.springframework.boot.data.redis.autoconfigure.DataRedisProperties;
@@ -33,6 +34,9 @@ public class RedissonConfig {
 
     @Autowired
     private ApplicationContext ctx;
+
+    @Value("${spring.data.redis.ssl.verify-mode:FULL}")
+    private String verifyMode;
 
     @Bean
     @Lazy
@@ -185,6 +189,19 @@ public class RedissonConfig {
         DataRedisProperties.Ssl ssl = redisProperties.getSsl();
         if (ssl.getBundle() == null) {
             return;
+        }
+
+        if (ssl.isEnabled()) {
+            SslVerificationMode mode;
+
+            if ("CA".equalsIgnoreCase(this.verifyMode)) {
+                mode = SslVerificationMode.CA_ONLY;
+            } else if ("NONE".equalsIgnoreCase(this.verifyMode)) {
+                mode = SslVerificationMode.NONE;
+            } else {
+                mode = SslVerificationMode.STRICT;
+            }
+            config.setSslVerificationMode(mode);
         }
 
         ObjectProvider<SslBundles> provider = ctx.getBeanProvider(SslBundles.class);
