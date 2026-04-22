@@ -2,6 +2,7 @@ package com.whl.spring.demo.config;
 
 import io.lettuce.core.SslVerifyMode;
 import jakarta.annotation.Nonnull;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -36,7 +37,7 @@ public class RedisConfig {
             try {
                 Field field = LettuceClientConfiguration.LettuceClientConfigurationBuilder.class.getDeclaredField("verifyMode");
                 field.setAccessible(true);
-                field.set(builder, SslVerifyMode.valueOf(verifyMode));
+                field.set(builder, SslVerifyMode.valueOf(StringUtils.upperCase(verifyMode)));
             } catch (Throwable t) {
                 logger.error(t.getMessage(), t);
             }
