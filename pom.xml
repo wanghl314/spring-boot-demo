@@ -7,7 +7,7 @@
         <!-- org/springframework/boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.5</version>
+        <version>4.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -25,7 +25,7 @@
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <!-- commons-io/commons-io -->
-        <commons-io.version>2.21.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
         <!-- org/apache/commons/commons-text -->
         <commons-text.version>1.15.0</commons-text.version>
         <!-- com/dameng/DmJdbcDriver18 -->
@@ -42,7 +42,7 @@
         <!-- com/github/axet/kaptcha -->
         <kaptcha.version>0.0.9</kaptcha.version>
         <!-- org/projectlombok/lombok -->
-        <lombok.version>1.18.44</lombok.version>
+        <lombok.version>1.18.46</lombok.version>
         <!-- org/mybatis/mybatis -->
         <mybatis.version>3.5.19</mybatis.version>
         <!-- com/baomidou/mybatis-plus-bom -->
