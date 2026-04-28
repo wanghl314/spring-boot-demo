@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 功能仅限当连接 postgresql 数据库时可用
+ */
 @RestController
 @RequestMapping("/pgvector")
 public class PGVectorDemoController {
