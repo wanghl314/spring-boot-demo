@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whl.spring.demo.dao.PGVectorDemoDao">
+
+    <resultMap type="com.whl.spring.demo.entity.PGVectorDemoEntity" id="BaseResultMap">
+        <id property="id" column="id" />
+        <result property="content" column="content" />
+        <result property="embedding" column="embedding" />
+    </resultMap>
+
+    <sql id="column_all">
+    <![CDATA[
+        id,
+        content,
+        embedding
+    ]]>
+    </sql>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        insert into sbd_pgvector_demo (
+            content,
+            embedding
+        ) values (
+            #{content},
+            #{embedding}
+        )
+    ]]>
+    </insert>
+
+    <update id="update">
+    <![CDATA[
+        update sbd_pgvector_demo
+    ]]>
+        <set>
+            <if test="content != null and content != ''">
+            <![CDATA[
+                content = #{content},
+            ]]>
+            </if>
+            <if test="embedding != null and embedding != ''">
+            <![CDATA[
+                embedding = #{embedding}
+            ]]>
+            </if>
+        </set>
+    <![CDATA[
+        where id = #{id}
+    ]]>
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+    <![CDATA[
+        select
+    ]]>
+        <include refid="column_all"></include>
+    <![CDATA[
+        from sbd_pgvector_demo order by id
+    ]]>
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+    <![CDATA[
+        select
+    ]]>
+        <include refid="column_all"></include>
+    <![CDATA[
+        from sbd_pgvector_demo where id = #{id}
+    ]]>
+    </select>
+
+    <delete id="deleteById">
+    <![CDATA[
+        delete from sbd_pgvector_demo where id = #{id}
+    ]]>
+    </delete>
+
+    <select id="searchSimilar" resultMap="BaseResultMap">
+    <![CDATA[
+        select * from sbd_pgvector_demo
+        order by embedding <=> #{vector}
+        limit #{limit}
+    ]]>
+    </select>
+
+</mapper>
