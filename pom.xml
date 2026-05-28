@@ -21,7 +21,7 @@
         <!-- org/owasp/antisamy/antisamy -->
         <antisamy.version>1.7.8</antisamy.version>
         <!-- com/taobao/arthas/arthas-spring-boot-starter -->
-        <arthas.version>4.1.9</arthas.version>
+        <arthas.version>4.2.0</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <!-- commons-io/commons-io -->
@@ -35,7 +35,7 @@
         <!-- com/alibaba/druid-spring-boot-4-starter -->
         <druid.version>1.2.28</druid.version>
         <!-- cn/hutool/hutool-bom -->
-        <hutool.version>5.8.44</hutool.version>
+        <hutool.version>5.8.46</hutool.version>
         <java.version>21</java.version>
         <!-- org/openjdk/jmh/jmh-generator-annprocess -->
         <jmh.version>1.37</jmh.version>
@@ -50,7 +50,7 @@
         <!-- org/mybatis/mybatis-spring -->
         <mybatis-spring.version>4.0.0</mybatis-spring.version>
         <!-- com/github/oshi/oshi-core -->
-        <oshi.version>7.1.0</oshi.version>
+        <oshi.version>7.2.1</oshi.version>
         <!-- org/redisson/redisson -->
         <redisson.version>4.4.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
