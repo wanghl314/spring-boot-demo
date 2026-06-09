@@ -2,6 +2,8 @@ package com.whl.spring.demo.controller;
 
 import com.whl.spring.demo.config.StorageConfig;
 import org.redisson.api.RLock;
+import org.redisson.api.RRateLimiter;
+import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -67,6 +70,24 @@ public class RedisController {
             return "系统繁忙，请稍后重试！";
         } finally {
             lock.unlock();
+        }
+    }
+
+    @GetMapping("/rateLimiter")
+    public String test(@RequestParam String key) {
+        RRateLimiter limiter = this.redissonClient.getRateLimiter("qps2" + key);
+        // 用 PER_CLIENT 当全局限流：它是单机独立计数，集群下会失效。
+        // 重复 setRate 不生效：trySetRate 是幂等的，已设置过就不会改。
+        limiter.trySetRate(RateType.OVERALL, 2, Duration.ofSeconds(1));
+        // 不设过期时间：Redis key 会永久存在，建议加 expire。
+        limiter.expire(Duration.ofMinutes(30));
+
+        if (limiter.tryAcquire(1)) {
+            logger.info("[限流通过] key={}, 剩余令牌={}", key, limiter.availablePermits());
+            return "正在执行业务逻辑。。。";
+        } else {
+            logger.warn("[限流拒绝] key={}, 剩余令牌={}", key, limiter.availablePermits());
+            return "请求过于频繁，请稍后重试！";
         }
     }
 
