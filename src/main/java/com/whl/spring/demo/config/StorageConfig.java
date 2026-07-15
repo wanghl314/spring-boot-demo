@@ -58,7 +58,9 @@ public class StorageConfig {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
-            lock.unlock();
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
     }
 
