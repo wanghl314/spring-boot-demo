@@ -19,6 +19,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import tools.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -64,6 +65,17 @@ public class RedisConfig {
 
     }
 
+    public static PolymorphicTypeValidator redisPolymorphicTypeValidator() {
+        // Do not use allowIfBaseType(Object.class): it allows every subtype.
+        return BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType("java.lang.")
+                .allowIfSubType("java.util.")
+                .allowIfSubType("java.math.")
+                .allowIfSubType("java.time.")
+                .allowIfSubType("com.whl.spring.demo.")
+                .build();
+    }
+
     private static class RedisTemplateBeanPostProcessor implements BeanPostProcessor {
 
         @Override
@@ -73,11 +85,7 @@ public class RedisConfig {
                 try {
                     StringRedisSerializer keySerializer = new StringRedisSerializer();
                     GenericJacksonJsonRedisSerializer valueSerializer = GenericJacksonJsonRedisSerializer.builder()
-                            .enableDefaultTyping(
-                                    BasicPolymorphicTypeValidator.builder()
-                                            .allowIfBaseType(Object.class)
-                                            .allowIfSubType((ctx, clazz) -> true)
-                                            .build())
+                            .enableDefaultTyping(redisPolymorphicTypeValidator())
                             .build();
                     redisTemplate.setKeySerializer(keySerializer);
                     redisTemplate.setHashKeySerializer(keySerializer);

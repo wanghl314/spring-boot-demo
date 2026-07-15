@@ -1,6 +1,7 @@
 package com.whl.spring.demo.controller;
 
 import com.whl.spring.demo.bean.FileInfo;
+import com.whl.spring.demo.util.FileUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
@@ -80,15 +82,14 @@ public class FileController {
 
     @GetMapping("/download/{name}")
     public void download(HttpServletRequest request, HttpServletResponse response, @PathVariable String name) throws Exception {
-        Path path = this.getFileStorePath();
-        Path destination = path.resolve(name);
+        Path destination = FileUtils.resolveWithinBase(this.getFileStorePath(), name);
 
-        if (Files.exists(destination)) {
+        if (destination != null && Files.exists(destination) && Files.isRegularFile(destination)) {
             File file = destination.toFile();
-            response.setHeader("Content-Type", this.getContentType(file));
-            response.setHeader("Content-Disposition", "attachment; filename=" + name);
-            response.setHeader("Content-Length", String.valueOf(file.length()));
-            response.setHeader("Cache-Control", "public,max-age=604800");
+            response.setHeader(HttpHeaders.CONTENT_TYPE, this.getContentType(file));
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, FileUtils.contentDispositionAttachment(destination.getFileName().toString()));
+            response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()));
+            response.setHeader(HttpHeaders.CACHE_CONTROL, "public,max-age=604800");
 
             try (OutputStream os = response.getOutputStream()) {
                 Files.copy(destination, os);
