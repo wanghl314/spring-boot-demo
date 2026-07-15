@@ -58,11 +58,12 @@ public class RedisController {
             return "没库存了！";
         }
         RLock lock = this.redissonClient.getLock(StorageConfig.STORAGE_LOCK);
-        boolean locked = false;
+        boolean acquired = false;
 
         try {
-            locked = lock.tryLock(1, TimeUnit.SECONDS);
-            if (!locked) {
+            acquired = lock.tryLock(1, TimeUnit.SECONDS);
+
+            if (!acquired) {
                 return "人太多了，请稍后重试！";
             }
             int realCount = this.storage.reduceStorage(count);
@@ -71,7 +72,7 @@ public class RedisController {
             logger.error(e.getMessage(), e);
             return "系统繁忙，请稍后重试！";
         } finally {
-            if (locked && lock.isHeldByCurrentThread()) {
+            if (acquired && lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
         }
