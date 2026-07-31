@@ -6,10 +6,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +40,9 @@ public class RestClientController {
     private PoolingHttpClientConnectionManager connManager;
 
     private Field connManagerClosedField;
+
+    @Autowired
+    private HttpClientBuilder builder;
 
     public RestClientController(RestClient.Builder builder) {
         this.restClient = builder.build();
@@ -150,6 +158,25 @@ public class RestClientController {
                 .headers(httpHeaders -> httpHeaders.putAll(requestHeaders))
                 .retrieve()
                 .toEntity(byte[].class);
+    }
+
+    @GetMapping("/simulateAutoClose")
+    public String simulateAutoClose() throws Exception {
+        HttpGet get = new HttpGet("https://www.baidu.com");
+        CloseableHttpClient httpClient = this.builder
+                .addRequestInterceptorFirst((request, entity, context) -> {
+                    // 一次性占用 100MB 堆内存
+                    // 会触发 org.apache.hc.client5.http.impl.classic.MainClientExec.execute() 方法中最后的
+                    // connectionManager.close(CloseMode.IMMEDIATE);
+                    // 使用同一个链接池，下一次发送http请求会提示 Connection pool shut down
+                    int size = 100 * 1024 * 1024;
+                    byte[] buffer = new byte[size];
+                })
+                .build();
+
+        try (CloseableHttpResponse response = httpClient.execute(get)) {
+            return "Downloaded!";
+        }
     }
 
 }
