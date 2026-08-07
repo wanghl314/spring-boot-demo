@@ -15,11 +15,12 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.util.Timeout;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.restclient.RestClientCustomizer;
+import org.springframework.boot.restclient.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestClient;
 
 import java.time.Duration;
 
@@ -82,8 +83,13 @@ public class RestClientConfig {
     }
 
     @Bean
-    public RestClient.Builder restClientBuilder(ClientHttpRequestFactory requestFactory) {
-        return RestClient.builder().requestFactory(requestFactory);
+    public RestClientCustomizer restClientCustomizer(ClientHttpRequestFactory requestFactory) {
+        return builder -> builder.requestFactory(requestFactory);
+    }
+
+    @Bean
+    public RestTemplateCustomizer restTemplateCustomizer(ClientHttpRequestFactory requestFactory) {
+        return restTemplate -> restTemplate.setRequestFactory(requestFactory);
     }
 
 }
