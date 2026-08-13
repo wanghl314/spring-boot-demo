@@ -10,7 +10,7 @@ mvn clean package -DskipTests=true
 ```
 
 - ## docker
-依赖于 eclipse-temurin 镜像
+依赖于 eclipse-temurin:21-jdk 镜像
 ```bash
 docker build -t whl/spring-boot-demo .
 docker run -d -p 8080:8080 -p 8563:8563 -p 8180:8180 -v E:\docker\spring-boot-demo\arthas:/usr/local/spring-boot-demo/arthas -v E:\docker\spring-boot-demo\conf:/usr/local/spring-boot-demo/conf -v E:\docker\spring-boot-demo\logs:/usr/local/spring-boot-demo/logs --name spring-boot-demo whl/spring-boot-demo

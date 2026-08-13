@@ -1,4 +1,4 @@
-FROM eclipse-temurin
+FROM eclipse-temurin:21-jdk
 VOLUME /tmp
 ARG FILE=spring-boot-demo.tar.gz
 COPY target/${FILE} /usr/local/${FILE}
