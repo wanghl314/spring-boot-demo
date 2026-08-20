@@ -21,9 +21,9 @@
         <!-- org/owasp/antisamy/antisamy -->
         <antisamy.version>1.7.8</antisamy.version>
         <!-- com/taobao/arthas/arthas-spring-boot-starter -->
-        <arthas.version>4.3.3</arthas.version>
+        <arthas.version>4.3.4</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
-        <commons-collections4.version>4.5.0</commons-collections4.version>
+        <commons-collections4.version>4.6.0</commons-collections4.version>
         <!-- commons-io/commons-io -->
         <commons-io.version>2.22.0</commons-io.version>
         <!-- org/apache/commons/commons-text -->
@@ -50,12 +50,12 @@
         <!-- org/mybatis/mybatis-spring -->
         <mybatis-spring.version>4.1.0</mybatis-spring.version>
         <!-- com/github/oshi/oshi-core -->
-        <oshi.version>7.4.1</oshi.version>
+        <oshi.version>7.5.0</oshi.version>
         <!-- org/redisson/redisson -->
         <redisson.version>4.7.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
         <!-- org/springdoc/springdoc-openapi-bom -->
-        <springdoc-openapi.version>3.0.3</springdoc-openapi.version>
+        <springdoc-openapi.version>3.1.0</springdoc-openapi.version>
     </properties>
 
     <repositories>
