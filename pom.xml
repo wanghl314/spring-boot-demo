@@ -7,7 +7,7 @@
         <!-- org/springframework/boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -50,7 +50,7 @@
         <!-- org/mybatis/mybatis-spring -->
         <mybatis-spring.version>4.1.0</mybatis-spring.version>
         <!-- com/github/oshi/oshi-core -->
-        <oshi.version>7.5.0</oshi.version>
+        <oshi.version>7.6.0</oshi.version>
         <!-- org/redisson/redisson -->
         <redisson.version>4.7.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
