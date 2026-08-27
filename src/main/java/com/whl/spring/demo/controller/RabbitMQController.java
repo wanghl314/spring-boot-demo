@@ -48,7 +48,7 @@ public class RabbitMQController {
             }
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
-            logger.info("catch exception: {}, requeue", e.getClass());
+            logger.info("catch exception: {}, requeue", e.getClass().getName());
             channel.basicNack(deliveryTag, false, true);
         }
     }
