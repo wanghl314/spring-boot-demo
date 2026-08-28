@@ -8,10 +8,11 @@ import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +164,8 @@ public class RestClientController {
     @GetMapping("/simulateAutoClose")
     public String simulateAutoClose() throws Exception {
         HttpGet get = new HttpGet("https://www.baidu.com");
-        CloseableHttpClient httpClient = this.builder
+
+        try (CloseableHttpClient httpClient = this.builder
                 .addRequestInterceptorFirst((request, entity, context) -> {
                     // 一次性占用 100MB 堆内存
                     // 会触发 org.apache.hc.client5.http.impl.classic.MainClientExec.execute() 方法中最后的
@@ -172,9 +174,15 @@ public class RestClientController {
                     int size = 100 * 1024 * 1024;
                     byte[] buffer = new byte[size];
                 })
-                .build();
+                .build()) {
+            httpClient.execute(get, response -> {
+                HttpEntity entity = response.getEntity();
 
-        try (CloseableHttpResponse response = httpClient.execute(get)) {
+                if (entity != null) {
+                    return EntityUtils.toString(entity);
+                }
+                return null;
+            });
             return "Downloaded!";
         }
     }
