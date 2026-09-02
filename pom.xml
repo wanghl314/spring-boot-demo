@@ -21,7 +21,7 @@
         <!-- org/owasp/antisamy/antisamy -->
         <antisamy.version>1.7.8</antisamy.version>
         <!-- com/taobao/arthas/arthas-spring-boot-starter -->
-        <arthas.version>4.3.4</arthas.version>
+        <arthas.version>4.3.5</arthas.version>
         <!-- org/apache/commons/commons-collections4 -->
         <commons-collections4.version>4.6.0</commons-collections4.version>
         <!-- commons-io/commons-io -->
@@ -42,7 +42,7 @@
         <!-- com/github/axet/kaptcha -->
         <kaptcha.version>0.0.9</kaptcha.version>
         <!-- org/projectlombok/lombok -->
-        <lombok.version>1.18.46</lombok.version>
+        <lombok.version>1.18.48</lombok.version>
         <!-- org/mybatis/mybatis -->
         <mybatis.version>3.5.19</mybatis.version>
         <!-- com/baomidou/mybatis-plus-bom -->
@@ -50,7 +50,7 @@
         <!-- org/mybatis/mybatis-spring -->
         <mybatis-spring.version>4.1.0</mybatis-spring.version>
         <!-- com/github/oshi/oshi-core -->
-        <oshi.version>7.6.0</oshi.version>
+        <oshi.version>7.6.1</oshi.version>
         <!-- org/redisson/redisson -->
         <redisson.version>4.7.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
