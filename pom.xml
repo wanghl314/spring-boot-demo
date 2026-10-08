@@ -50,9 +50,9 @@
         <!-- org/mybatis/mybatis-spring -->
         <mybatis-spring.version>4.1.0</mybatis-spring.version>
         <!-- com/github/oshi/oshi-core -->
-        <oshi.version>7.6.1</oshi.version>
+        <oshi.version>7.7.0</oshi.version>
         <!-- org/redisson/redisson -->
-        <redisson.version>4.7.0</redisson.version>
+        <redisson.version>4.8.0</redisson.version>
         <revision>1.0-SNAPSHOT</revision>
         <!-- org/springdoc/springdoc-openapi-bom -->
         <springdoc-openapi.version>3.1.1</springdoc-openapi.version>
